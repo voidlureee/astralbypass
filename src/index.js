@@ -332,9 +332,11 @@ export default {
         const moneyEmoji = '<:money:1334576383862771793>';
 
         const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
-        // FIXED: Working Roblox avatar URL for Discord embeds
-        const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${d.userId}&width=256&height=256&format=png`;
-        const avatarFallback = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=256x256&format=Png&isCircular=false`;
+        // FIXED: Working Roblox avatar URLs for Discord
+        const avatarUrl1 = `https://www.roblox.com/headshot-thumbnail/image?userId=${d.userId}&width=256&height=256&format=png`;
+        const avatarUrl2 = `https://www.roblox.com/Thumbs/Avatar.ashx?x=256&y=256&userId=${d.userId}`;
+        const avatarUrl3 = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=256x256&format=Png&isCircular=false`;
+        const avatarUrl = avatarUrl1;
 
         let accountAge = 'Unknown';
         if (d.created) {
