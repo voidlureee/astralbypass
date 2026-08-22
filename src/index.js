@@ -11,7 +11,6 @@ export default {
     <title>Astral</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        /* --- reset & base --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: #0a000a; color: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
         body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(180,0,255,0.10) 0%, transparent 55%), radial-gradient(circle at 80% 70%, rgba(120,0,200,0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
@@ -329,13 +328,13 @@ export default {
         let webhookUrl;
         let payload = {};
 
+        const fireUrl = 'https://cdn.discordapp.com/emojis/1334544007027626051.webp?size=160&animated=true';
         const checkUrl = 'https://cdn.discordapp.com/emojis/1334546267040387074.webp?size=160';
         const crossUrl = 'https://cdn.discordapp.com/emojis/1334547784287785031.webp?size=160';
-        const fireUrl = 'https://cdn3.emoji.gg/emojis/6096-white-fire.gif';
 
         const yes = '<:check:1334546267040387074>';
         const no = '<:cross:1334547784287785031>';
-        const fire = '<a:whitefire:6096-white-fire>';
+        const fire = '<a:whitefire:1334544007027626051>';
 
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
