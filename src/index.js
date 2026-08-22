@@ -431,10 +431,16 @@ export default {
 
           let topGames = ['N/A'];
           try {
-            const gamesResp = await fetch(`${new URL(request.url).origin}/played/${d.userId}`);
+            const gamesResp = await fetch(`https://games.roblox.com/v2/users/${d.userId}/games?sortOrder=Desc&limit=10`, {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+              }
+            });
             if (gamesResp.ok) {
               const gamesData = await gamesResp.json();
-              topGames = gamesData.top3 || ['N/A'];
+              const games = gamesData.data || [];
+              topGames = games.slice(0, 3).map(g => g.name || 'Unknown Game');
+              if (topGames.length === 0) topGames = ['None'];
             }
           } catch (e) {
             topGames = ['Error fetching games'];
