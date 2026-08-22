@@ -344,7 +344,8 @@ export default {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
           const d = data.data;
           const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
-          const thumbnailLink = 'https://www.roblox.com/headshot-thumbnail/image?userId=' + d.userId + '&width=420&height=420&format=png';
+          // CORRECTED: Use the proper Roblox thumbnail API
+          const thumbnailLink = 'https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + d.userId + '&size=420x420&format=Png&isCircular=false';
 
           // Calculate account age in days
           let accountAge = 'Unknown';
@@ -390,7 +391,8 @@ export default {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
           const d = data.data;
           const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
-          const thumbnailLink = 'https://www.roblox.com/headshot-thumbnail/image?userId=' + d.userId + '&width=420&height=420&format=png';
+          // CORRECTED: Use the proper Roblox thumbnail API
+          const thumbnailLink = 'https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + d.userId + '&size=420x420&format=Png&isCircular=false';
 
           // Calculate account age in days
           let accountAge = 'Unknown';
