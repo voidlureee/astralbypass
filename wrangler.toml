@@ -1,0 +1,6 @@
+name = "noctrune-bypass"
+main = "src/index.js"
+compatibility_date = "2024-08-15"
+
+[vars]
+ENVIRONMENT = "production"
